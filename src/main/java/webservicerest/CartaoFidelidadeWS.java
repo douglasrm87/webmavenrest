@@ -21,7 +21,7 @@ https://devcenter.heroku.com/articles/deploying-java-applications-to-heroku-from
 
  */
 
-//http://localhost:8080/webmavenheroku/rest/cartaofidelidade/123456
+//http://localhost:8080/webmavenrest/rest/cartaofidelidade/123456
 
 @Path("/cartaofidelidade")
 public class CartaoFidelidadeWS {
