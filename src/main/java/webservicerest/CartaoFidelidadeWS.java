@@ -21,20 +21,12 @@ https://devcenter.heroku.com/articles/deploying-java-applications-to-heroku-from
 
  */
 
-//http://localhost:8080/webmavenrest/rest/cartaofidelidade/123456
+//http://localhost:8080/webmavenheroku/rest/cartaofidelidade/123456
 
-@Path("/cartaofidelidade")
+ 
 public class CartaoFidelidadeWS {
-
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String validarAcessoWS() {
-		return "Web Service RestFul acessado com sucesso. Parabens.";
-	}
-
-	@GET
-	@Path("/{cpf}")
-	public String registrarItemCartaoFidelidade(@PathParam("cpf") String cpf) {
+ 
+	public String registrarItemCartaoFidelidade(String cpf) {
 		boolean valida = false;
 		int qdadeSelos = 0;
 		for (ClienteDTO cliente : EscopoAplicacao.listaClienteCartaoFidelidade) {
