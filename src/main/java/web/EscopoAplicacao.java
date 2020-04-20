@@ -8,6 +8,8 @@ import javax.faces.bean.ManagedBean;
 
 import postgree.dto.ClienteDTO;
 
+
+
 @ApplicationScoped
 @ManagedBean(name = "geral", eager = true)
 public class EscopoAplicacao {
