@@ -1,4 +1,4 @@
-package PostgreSQLJDBC;
+package bancodedados;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,6 +21,19 @@ public class PostgreSQLJDBC {
 	private static final String SENHA_BD = "123456";
 	private static final String DATABASE = "faculdade";
  
+	protected static final String TABELA_CARTAO_FIDELIDADE = " CARTAO_FIDELIDADE ";
+	protected static final String ID_CARTAO = "id_cartao";// não permite espaços.
+	protected static final String DATA_INCLUSAO = "data_inclusao";// não permite espaços.
+
+	protected static final String TABELA_CLIENTE = " CLIENTE_CARTAO_FIDELIDADE ";
+	protected static final String ID_CLIENTE = "id_cliente";// não permite espaços.
+	protected static final String CPF_CLIENTE = "cpf_cliente";// não permite espaços.
+	protected static final String NOME = "nome";// não permite espaços.
+	protected static final String DATA_REGISTRO = "data_registro";// não permite espaços.
+	protected static final String VIRGULA = " , ";
+	
+	protected static final String FECHA_PARENTESES = " ) ";
+	protected static final String ABRE_PARENTESES = " ( ";
 	protected Scanner leia = new Scanner(System.in);
 
 	protected Connection conectarBDPostgree() {

@@ -91,7 +91,7 @@ public class CentralWebserviceRest {
 
 	@GET
 	@Path("/{id}/{cpf}/{nome}")
-	public Response cadastrarCliente(@PathParam("id") Integer id, @PathParam("cpf") String cpf,
+	public Response cadastrarCliente(@PathParam("id") Integer id, @PathParam("cpf") int cpf,
 			@PathParam("nome") String nomeCliente) {
 
 		String retorno = null;

@@ -3,14 +3,8 @@ package webservicerest;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import postgree.dto.CartaoFidelidadeDTO;
-import postgree.dto.ClienteDTO;
+import bancodedados.dto.CartaoFidelidadeDTO;
+import bancodedados.dto.ClienteDTO;
 import web.EscopoAplicacao;
 
 /*
@@ -26,12 +20,12 @@ https://devcenter.heroku.com/articles/deploying-java-applications-to-heroku-from
  
 public class CartaoFidelidadeWS {
  
-	public String registrarItemCartaoFidelidade(String cpf) {
+	public String registrarItemCartaoFidelidade(int cpf) {
 		boolean valida = false;
 		int qdadeSelos = 0;
 		for (ClienteDTO cliente : EscopoAplicacao.listaClienteCartaoFidelidade) {
-			if (cpf.equals(cliente.getCpfCliente())) {
-				cliente.getCartaoCliente().add(new CartaoFidelidadeDTO(new Date()));
+			if (cpf == cliente.getCpfCliente()) {
+				cliente.getCartaoCliente().add(new CartaoFidelidadeDTO(new Date(),cpf));
 				valida = true;
 				qdadeSelos = cliente.getCartaoCliente().size();
 				if (qdadeSelos == 10) {
