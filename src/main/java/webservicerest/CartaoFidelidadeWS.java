@@ -25,11 +25,11 @@ public class CartaoFidelidadeWS {
 		int qdadeSelos = 0;
 		for (ClienteDTO cliente : EscopoAplicacao.listaClienteCartaoFidelidade) {
 			if (cpf == cliente.getCpfCliente()) {
-				cliente.getCartaoCliente().add(new CartaoFidelidadeDTO(new Date(),cpf));
+				cliente.adicionarCartaoFidelidade( new CartaoFidelidadeDTO(new Date(),cpf));
 				valida = true;
-				qdadeSelos = cliente.getCartaoCliente().size();
+				qdadeSelos = cliente.obterBonusCartaoFidelidade();
 				if (qdadeSelos == 10) {
-					cliente.setCartaoCliente(new ArrayList<CartaoFidelidadeDTO>());
+					cliente.adicionarCartaoFidelidade( new CartaoFidelidadeDTO());
 					return "Cliente atingiu 10 Selos. CPF:" + cpf + " - Consumo gratis.";
 				}
 			}

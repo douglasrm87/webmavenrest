@@ -1,9 +1,6 @@
 package br.com.bottelegram.dhcppagina;
 
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.List;
 
 import org.apache.commons.net.util.SubnetUtils;
 
