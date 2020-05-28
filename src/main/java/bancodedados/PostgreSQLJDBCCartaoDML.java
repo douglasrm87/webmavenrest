@@ -91,7 +91,7 @@ public class PostgreSQLJDBCCartaoDML extends PostgreSQLJDBCDML {
 		sql.append(IGUAL_E_INTERROGACAO);
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
 				ResultSet rs = preparedStatement.executeQuery();) {
-			preparedStatement.setInt(1, cartao.getCpfCliente());
+			preparedStatement.setLong(1, cartao.getCpfCliente());
 			while (rs.next()) {
 				System.out.println(rs.getInt(CPF_CLIENTE));
 				System.out.println(rs.getString(DATA_INCLUSAO));
@@ -142,7 +142,7 @@ public class PostgreSQLJDBCCartaoDML extends PostgreSQLJDBCDML {
 		System.out.println("Comando insert: " + sql);
 
 		try (PreparedStatement pstm = con.prepareStatement(sql.toString());) {
-			pstm.setInt(1, cartao.getCpfCliente());
+			pstm.setLong(1, cartao.getCpfCliente());
 			pstm.setDate(3, new Date(cartao.getDataInclusao().getTime()));
 			pstm.execute();
 

@@ -36,6 +36,15 @@ public class PostgreSQLJDBC {
 	protected static final String ABRE_PARENTESES = " ( ";
 	protected Scanner leia = new Scanner(System.in);
 
+	public static void main(String[] args) {
+		PostgreSQLJDBC p = new PostgreSQLJDBC();
+		Connection c = p.conectarBDPostgree();
+		try {
+			c.close();
+		} catch (SQLException e) {
+ 			e.printStackTrace();
+		}
+	}
 	protected Connection conectarBDPostgree() {
 		Connection con = null;
 		try {
@@ -44,7 +53,7 @@ public class PostgreSQLJDBC {
 		} catch (Exception e) {
 			printSQLException(null, e);
 		}
-		System.out.println("Opened database successfully");
+		System.out.println("Conexão estabelecida com sucesso.");
 		return con;
 	}
 

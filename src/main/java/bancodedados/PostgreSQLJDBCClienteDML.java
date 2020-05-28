@@ -131,7 +131,7 @@ public class PostgreSQLJDBCClienteDML extends PostgreSQLJDBCDML {
 		sql.append(IGUAL_E_INTERROGACAO);
 		System.out.println("Comando sql selecionar cliente por CPF: " + sql);
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());) {
-			preparedStatement.setInt(1, cliente.getCpfCliente());
+			preparedStatement.setLong(1, cliente.getCpfCliente());
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				clienteSelecionado = new ClienteDTO();
@@ -190,7 +190,7 @@ public class PostgreSQLJDBCClienteDML extends PostgreSQLJDBCDML {
 		System.out.println("Comando insert: " + sql);
 
 		try (PreparedStatement pstm = con.prepareStatement(sql.toString());) {
-			pstm.setInt(1, cliente.getCpfCliente());
+			pstm.setLong(1, cliente.getCpfCliente());
 			pstm.setString(2, cliente.getNomeCliente());
 			pstm.setDate(3, new Date(cliente.getDtRegistro().getTime()));
 			pstm.execute();
@@ -217,7 +217,7 @@ public class PostgreSQLJDBCClienteDML extends PostgreSQLJDBCDML {
 			System.out.println("Comando delete: " + sql);
 
 			try (PreparedStatement pstm = con.prepareStatement(sql.toString());) {
-				pstm.setInt(1, clienteID.getCpfCliente());
+				pstm.setLong(1, clienteID.getCpfCliente());
 				retorno = pstm.executeUpdate();
 
 			} catch (SQLException e) {
@@ -248,7 +248,7 @@ public class PostgreSQLJDBCClienteDML extends PostgreSQLJDBCDML {
 			System.out.println("Comando atualizar CPF: " + sql);
 			try (PreparedStatement pstm = con.prepareStatement(sql.toString());) {
 				pstm.setString(1, cliente.getNomeCliente());
-				pstm.setInt(2, clienteID.getId());
+				pstm.setLong(2, clienteID.getId());
 				retorno = pstm.executeUpdate();
 
 			} catch (SQLException e) {

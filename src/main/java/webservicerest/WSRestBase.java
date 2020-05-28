@@ -48,6 +48,7 @@ heroku buildpacks:clear  --remote origin
 //http://localhost:8080/webmavenrest/rest/cartaofidelidade
 //http://localhost:8080/webmavenrest/rest/cartaofidelidade/123
 
+//http://localhost:8080/webmavenrest/rest/centralservicos/1/123456/Douglas
 
 //https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/path-annotion-resource-mapping.html
 @ApplicationPath("rest")

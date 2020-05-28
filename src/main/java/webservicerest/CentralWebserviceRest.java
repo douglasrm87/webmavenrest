@@ -54,8 +54,8 @@ heroku war:deploy target/webmavenheroku-0.0.1-SNAPSHOT.war --remote origin
 heroku buildpacks:clear  --remote origin
 
  */
-//http://localhost:8080/webmavenheroku/rest/centralservicos/1/123456/Douglas
-//http://localhost:8080/webmavenheroku/rest/centralservicos/1/123456/Douglas
+//http://localhost:8080/webmavenrest/rest/centralservicos/1/123456/Douglas
+//http://localhost:8080/webmavenrest/rest/centralservicos/1/123456/Douglas
 @Path("/centralservicos")
 public class CentralWebserviceRest {
 
