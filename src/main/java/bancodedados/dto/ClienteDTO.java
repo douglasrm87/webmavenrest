@@ -4,20 +4,33 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import bancodedados.PostgreSQLJDBCClienteDML;
+
 public class ClienteDTO {
-	private long id;
-	private long cpfCliente;
-	private String nomeCliente;
-	private String permiteEmailSMS;
-	private String email;
-	private EnderecoDTO endereco;
-	private String telefone;
-	private String cep;
-	private List<CartaoFidelidadeDTO> cartaoCliente = new ArrayList<>();
-	private List<BonusCartaoFidelidadeDTO> bonusCartaoCliente = new ArrayList<>();
-	private PedidoDTO pedido;
+
+	private long id;// serial
+	private long idEmpresa = CentralMensagensBrewField.ID_BREW_FIELD;
+	private long cpfCliente = CentralMensagensBrewField.CPF_PADRAO;
+	private String permiteEmailSMS = "N";
+	private String email = "teste@teste.com";
 	private Date dtRegistro = new Date();
+
+	private String nomeCliente;
+	private String telefone;
+	private Long idUsuarioTelegram;
+
+	private EnderecoDTO endereco;
+	private BonusCartaoFidelidadeDTO bonus;
+	private PedidoDTO pedido;
 	private List<PedidoDTO> listaPedido = new ArrayList<>();
+
+	public BonusCartaoFidelidadeDTO getBonus() {
+		return this.bonus;
+	}
+
+	public void setBonus(BonusCartaoFidelidadeDTO bonus) {
+		this.bonus = bonus;
+	}
 
 	public List<PedidoDTO> getListaPedido() {
 		return this.listaPedido;
@@ -27,40 +40,44 @@ public class ClienteDTO {
 		this.listaPedido = listaPedido;
 	}
 
-	public void adicionarCartaoFidelidade(CartaoFidelidadeDTO cartaoFid) {
-		this.cartaoCliente.add(cartaoFid);
-		if (this.cartaoCliente.size() == 10) {
-			this.bonusCartaoCliente.add(new BonusCartaoFidelidadeDTO(new Date(), this.cpfCliente));
-			this.cartaoCliente = new ArrayList<>();
-		}
-	}
+//	public void adicionarCartaoFidelidade(CartaoFidelidadeDTO cartaoFid) {
+//		this.cartaoCliente.add(cartaoFid);
+//		if (this.cartaoCliente.size() == 10) {
+//			this.bonusCartaoCliente.add(new BonusCartaoFidelidadeDTO(new Date(), this.cpfCliente));
+//			this.cartaoCliente = new ArrayList<>();
+//		}
+//	}
+//
+//	public int consumirBonusCartaoFidelidade() {
+//		int bonus = this.bonusCartaoCliente.size();
+//		this.bonusCartaoCliente = new ArrayList<>();
+//		return bonus;
+//	}
 
-	public int consumirBonusCartaoFidelidade() {
-		int bonus = this.bonusCartaoCliente.size();
-		this.bonusCartaoCliente = new ArrayList<>();
-		return bonus;
-	}
+//	public int obterBonusCartaoFidelidade() {
+//		return this.bonusCartaoCliente.size();
+//	}
+//
+//	public int obterCartaoFidelidade() {
+//		return this.cartaoCliente.size();
+//	}
 
-	public int obterBonusCartaoFidelidade() {
-		return this.bonusCartaoCliente.size();
-	}
-
-	public int obterCartaoFidelidade() {
-		return this.cartaoCliente.size();
-	}
-	public ClienteDTO(String nomeCliente, String telefone) {
+	// inserir o telefone e o cliente apenas.
+	public ClienteDTO(String nomeCliente, String telefone, long idUsuarioTelegram) {
 		super();
 		this.nomeCliente = nomeCliente;
 		this.telefone = telefone;
+		this.idUsuarioTelegram = idUsuarioTelegram;
+		PostgreSQLJDBCClienteDML cadastrarCli = new PostgreSQLJDBCClienteDML();
+		cadastrarCli.cadastrarClienteDTO(this);
 	}
 
-	public ClienteDTO(String nomeCliente, String telefone, long cpfCliente, String cep, EnderecoDTO endereco) {
+	public ClienteDTO(String nomeCliente, String telefone, long cpfCliente, EnderecoDTO endereco) {
 		super();
 		this.cpfCliente = cpfCliente;
 		this.nomeCliente = nomeCliente;
 		this.telefone = telefone;
 		this.endereco = endereco;
-		setCep(cep);
 	}
 
 	public long getId() {
@@ -99,6 +116,14 @@ public class ClienteDTO {
 		return this.email;
 	}
 
+	public long getIdEmpresa() {
+		return idEmpresa;
+	}
+
+	public void setIdEmpresa(long idEmpresa) {
+		this.idEmpresa = idEmpresa;
+	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -119,7 +144,7 @@ public class ClienteDTO {
 		this.telefone = telefone;
 	}
 
- 	public Date getDtRegistro() {
+	public Date getDtRegistro() {
 		return this.dtRegistro;
 	}
 
@@ -138,9 +163,9 @@ public class ClienteDTO {
 		this.nomeCliente = nomeCliente;
 	}
 
-	public ClienteDTO(int cpfCliente) {
+	public ClienteDTO(String telefone) {
 		super();
-		this.cpfCliente = cpfCliente;
+		this.telefone = telefone;
 	}
 
 	public PedidoDTO getPedido() {
@@ -151,23 +176,12 @@ public class ClienteDTO {
 		this.pedido = pedido;
 	}
 
-	public String getCep() {
-		return this.cep;
+	public Long getIdUsuarioTelegram() {
+		return this.idUsuarioTelegram;
 	}
 
-	public void setCep(String cep) {
-		String strCEP = cep.substring(0, 5);
-		System.out.println("CEP substring: " + strCEP);
-		int cepInt = 0;
-		try {
-			cepInt = Integer.parseInt(strCEP);
-			if (cepInt < 80000 || cepInt > 82999) {
-				throw new IllegalArgumentException(CentralMensagensBrewField.CEP_NAO_CURITIBA);
-			}
-		} catch (Exception e) {
-			throw new IllegalArgumentException(CentralMensagensBrewField.CEP_FORMATO_INVALIDO);
-		}
-		this.cep = cep;
+	public void setIdUsuarioTelegram(Long idUsuarioTelegram) {
+		this.idUsuarioTelegram = idUsuarioTelegram;
 	}
 
 }

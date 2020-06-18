@@ -1,13 +1,8 @@
 package bancodedados;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
-import java.util.Scanner;
 
 //http://brunorota.com.br/2012/05/19/tutorial-criar-crud-em-java-com-jdbc-parte-1-final/
 
@@ -16,7 +11,7 @@ import java.util.Scanner;
 
 public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 
-	private static final String AUTO_INCREMENT = " serial ";
+	private static final String AUTO_INCREMENT = " bigserial ";
 	private static final String REFERENCES = " REFERENCES ";
 	private static final String FOREIGN_KEY = " FOREIGN KEY ";
 
@@ -24,8 +19,11 @@ public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 	private static final String DROP_TABLE = " DROP TABLE ";
 	private static final String PRIMARY_KEY = " PRIMARY KEY ";
 
+	private static final String TEXT_NULL = " TEXT NULL ";
 	private static final String TEXT_NOT_NULL = " TEXT NOT NULL ";
+	private static final String DOUBLE_NOT_NULL = " DOUBLE PRECISION NOT NULL ";
 	private static final String INT_NOT_NULL = " INT NOT NULL ";
+	private static final String BIGINT_NOT_NULL = " BIGINT NOT NULL ";
 	private static final String NOT_NULL = " NOT NULL ";
 	private static final String DATE_NOT_NULL = " DATE NOT NULL";
 
@@ -40,21 +38,31 @@ public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 			System.out.println("1-criar tabelas");
 			System.out.println("2-remover tabelas");
 
-			System.out.println("Digite sua opção:");
+			System.out.println("Digite sua op��o:");
 			int op = this.leia.nextInt();
 
 			switch (op) {
 			case 1:
 				if (con != null) {
-					criarTabelaCliente(con);
+					criarTabelaBonus(con);
 					criarTabelaCartao(con);
+//					criarTabelaClienteDTO(con);
+//					criarTabelaEnderecoDTO(con);
+//					criarTabelaPedidoDTO(con);
+//					criarTabelaItemPedidoDTO(con);
+//					criarTabelaPagamentoDTO(con);
 				}
 				break;
 			case 2:
 				if (con != null) {
 					// Devido a chave estrangeira a remoção da tabela deve ser inversaa criação.
 					removerTabelaCartao(con);
-					removerTabelaCliente(con);
+					removerTabelaBonus(con);
+//					removerTabelaEnderecoDTO(con);
+//					removerTabelaItemPedidoDTO(con);
+//					removerTabelaPagamentoDTO(con);
+//					removerTabelaPedidoDTO(con);
+//					removerTabelaClienteDTO(con);
 
 				}
 				break;
@@ -71,10 +79,58 @@ public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 		}
 	}
 
-	private void removerTabelaCliente(Connection con) {
+	private void removerTabelaEnderecoDTO(Connection con) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(DROP_TABLE);
-		sql.append(TABELA_CLIENTE);
+		sql.append(TABELA_ENDERECO_DTO);
+		System.out.println("Comando remover tabela: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void removerTabelaPagamentoDTO(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(DROP_TABLE);
+		sql.append(TABELA_PAGAMENTO_DTO);
+		System.out.println("Comando remover tabela: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void removerTabelaPedidoDTO(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(DROP_TABLE);
+		sql.append(TABELA_PEDIDO_DTO);
+		System.out.println("Comando remover tabela: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void removerTabelaItemPedidoDTO(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(DROP_TABLE);
+		sql.append(TABELA_ITEM_PEDIDO_DTO);
+		System.out.println("Comando remover tabela: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void removerTabelaClienteDTO(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(DROP_TABLE);
+		sql.append(TABELA_CLIENTE_DTO);
 		System.out.println("Comando remover tabela: " + sql);
 		try (Statement statement = con.createStatement();) {
 			statement.execute(sql.toString());
@@ -95,34 +151,202 @@ public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 		}
 	}
 
+	private void removerTabelaBonus(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(DROP_TABLE);
+		sql.append(TABELA_BONUS_CARTAO_FIDELIDADE);
+		System.out.println("Comando remover tabela: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void criarTabelaBonus(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(CREATE_TABLE_IF_NOT_EXISTS);
+		sql.append(TABELA_BONUS_CARTAO_FIDELIDADE);
+
+		sql.append(ABRE_PARENTESES);
+		sql.append(ID_BONUS);
+		sql.append(AUTO_INCREMENT);
+		sql.append(NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(TELEFONE);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(BONUS_CONSUMIDO);
+		sql.append(INT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(BONUS_ATIVADO);
+		sql.append(INT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(DATA_INCLUSAO);
+		sql.append(DATE_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(DATA_VENCIMENTO);
+		sql.append(DATE_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(PRIMARY_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(ID_BONUS);
+		sql.append(VIRGULA);
+		sql.append(TELEFONE);
+		sql.append(FECHA_PARENTESES);
+		sql.append(VIRGULA);
+		// FOREIGN KEY (col1, col2) REFERENCES tabela-pai (col1, col2);
+		sql.append(FOREIGN_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(FECHA_PARENTESES);
+
+		sql.append(REFERENCES);
+		sql.append(TABELA_CLIENTE_DTO);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(FECHA_PARENTESES);
+		sql.append(FECHA_PARENTESES);
+		System.out.println("Comando criar tabela bonus: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+
+	}
+
 	private void criarTabelaCartao(Connection con) {
+		// A FK deve "bater" com a respectiva PK. Eu reveria seu padr�o de nomenclatura.
 		StringBuilder sql = new StringBuilder();
 		sql.append(CREATE_TABLE_IF_NOT_EXISTS);
 		sql.append(TABELA_CARTAO_FIDELIDADE);
 		sql.append(ABRE_PARENTESES);
+
 		sql.append(ID_CARTAO);
 		sql.append(AUTO_INCREMENT);
 		sql.append(NOT_NULL);
 		sql.append(VIRGULA);
-		sql.append(CPF_CLIENTE);// cpf
+
+		sql.append(ID_PEDIDO);
 		sql.append(INT_NOT_NULL);
 		sql.append(VIRGULA);
+
+		sql.append(ID_BONUS);
+		sql.append(INT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(TELEFONE);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(ESTADO_SELO_CARTAO);
+		sql.append(INT_NOT_NULL);
+		sql.append(VIRGULA);
+
 		sql.append(DATA_INCLUSAO);
 		sql.append(DATE_NOT_NULL);
 		sql.append(VIRGULA);
+
+		sql.append(DATA_VENCIMENTO);
+		sql.append(DATE_NOT_NULL);
+		sql.append(VIRGULA);
+
 		sql.append(PRIMARY_KEY);
 		sql.append(ABRE_PARENTESES);
+
 		sql.append(ID_CARTAO);
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(VIRGULA);
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_BONUS);
 		sql.append(FECHA_PARENTESES);
 		sql.append(VIRGULA);
 		sql.append(FOREIGN_KEY);
 		sql.append(ABRE_PARENTESES);
-		sql.append(CPF_CLIENTE);// cpf
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(FECHA_PARENTESES);
+
+		sql.append(REFERENCES);
+		sql.append(TABELA_PEDIDO_DTO);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(FECHA_PARENTESES);
+		sql.append(VIRGULA);
+
+		sql.append(FOREIGN_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_BONUS);
 		sql.append(FECHA_PARENTESES);
 		sql.append(REFERENCES);
-		sql.append(TABELA_CLIENTE);
+		sql.append(TABELA_BONUS_CARTAO_FIDELIDADE);
 		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_BONUS);
+		sql.append(FECHA_PARENTESES);
+		sql.append(FECHA_PARENTESES);
+
+		System.out.println("Comando criar tabela cartao: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void criarTabelaClienteDTO(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(CREATE_TABLE_IF_NOT_EXISTS);
+		sql.append(TABELA_CLIENTE_DTO);
+		sql.append(ABRE_PARENTESES);
+		sql.append(ID_CLIENTE);
+		sql.append(AUTO_INCREMENT);
+		sql.append(NOT_NULL);
+		sql.append(VIRGULA);
 		sql.append(CPF_CLIENTE);// cpf
+		sql.append(BIGINT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(NOME);// nome
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(DATA_REGISTRO);// data
+		sql.append(DATE_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(PERMITE_EMAIL_SMS);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(EMAIL);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(EMPRESA);
+		sql.append(INT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(TELEFONE);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(ID_USUARIO_TELEGRAM);// id telegram
+		sql.append(BIGINT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(PRIMARY_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
 		sql.append(FECHA_PARENTESES);
 		sql.append(FECHA_PARENTESES);
 
@@ -134,25 +358,230 @@ public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 		}
 	}
 
-	private void criarTabelaCliente(Connection con) {
+	private void criarTabelaEnderecoDTO(Connection con) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(CREATE_TABLE_IF_NOT_EXISTS);
-		sql.append(TABELA_CLIENTE);
+		sql.append(TABELA_ENDERECO_DTO);
 		sql.append(ABRE_PARENTESES);
-		sql.append(ID_CLIENTE);
+
+		sql.append(UF);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(CIDADE);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(BAIRRO);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(TIPO_LOGRADOURO);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(LOGRADOURO);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(NUMERO);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(TELEFONE);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(CEP);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(PRIMARY_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(FECHA_PARENTESES);
+		sql.append(VIRGULA);
+
+		sql.append(FOREIGN_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);//
+		sql.append(FECHA_PARENTESES);
+		sql.append(REFERENCES);
+		sql.append(TABELA_CLIENTE_DTO);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(FECHA_PARENTESES);
+		sql.append(FECHA_PARENTESES);
+
+		System.out.println("Comando criar tabela: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void criarTabelaPedidoDTO(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(CREATE_TABLE_IF_NOT_EXISTS);
+		sql.append(TABELA_PEDIDO_DTO);
+		sql.append(ABRE_PARENTESES);
+		sql.append(ID_PEDIDO);
 		sql.append(AUTO_INCREMENT);
 		sql.append(NOT_NULL);
 		sql.append(VIRGULA);
-		sql.append(CPF_CLIENTE);// cpf
-		sql.append(INT_NOT_NULL);
-		sql.append(PRIMARY_KEY);
+
+		sql.append(DATA_REGISTRO);// data
+		sql.append(DATE_NOT_NULL);
 		sql.append(VIRGULA);
-		sql.append(NOME);// nome
+
+		sql.append(VALOR_PEDIDO);
+		sql.append(DOUBLE_NOT_NULL);
+		sql.append(VIRGULA);
+		sql.append(URL_RECIBO);
+		sql.append(TEXT_NULL);
+
+		sql.append(VIRGULA);
+		sql.append(ESTADO_PEDIDO);
+		sql.append(INT_NOT_NULL);
+
+		sql.append(VIRGULA);
+		sql.append(TELEFONE);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(PRIMARY_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(FECHA_PARENTESES);
+		sql.append(VIRGULA);
+		sql.append(FOREIGN_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);//
+		sql.append(FECHA_PARENTESES);
+		sql.append(REFERENCES);
+		sql.append(TABELA_CLIENTE_DTO);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(FECHA_PARENTESES);
+		sql.append(FECHA_PARENTESES);
+
+		System.out.println("Comando criar tabela: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void criarTabelaItemPedidoDTO(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(CREATE_TABLE_IF_NOT_EXISTS);
+		sql.append(TABELA_ITEM_PEDIDO_DTO);
+		sql.append(ABRE_PARENTESES);
+		sql.append(ID_ITEM_PEDIDO);
+		sql.append(AUTO_INCREMENT);
+		sql.append(NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(ID_PEDIDO);
+		sql.append(INT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(DESCRICAO_ESTILO);
 		sql.append(TEXT_NOT_NULL);
 		sql.append(VIRGULA);
 
 		sql.append(DATA_REGISTRO);// data
 		sql.append(DATE_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(VALOR_ITEM_PEDIDO);
+		sql.append(DOUBLE_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(TELEFONE);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(PRIMARY_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_ITEM_PEDIDO);
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(FECHA_PARENTESES);
+		sql.append(VIRGULA);
+		sql.append(FOREIGN_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);//
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(FECHA_PARENTESES);
+		sql.append(REFERENCES);
+		sql.append(TABELA_PEDIDO_DTO);
+		sql.append(ABRE_PARENTESES);
+
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+
+		sql.append(FECHA_PARENTESES);
+		sql.append(FECHA_PARENTESES);
+
+		System.out.println("Comando criar tabela: " + sql);
+		try (Statement statement = con.createStatement();) {
+			statement.execute(sql.toString());
+		} catch (SQLException e) {
+			printSQLException(e, null);
+		}
+	}
+
+	private void criarTabelaPagamentoDTO(Connection con) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(CREATE_TABLE_IF_NOT_EXISTS);
+		sql.append(TABELA_PAGAMENTO_DTO);
+		sql.append(ABRE_PARENTESES);
+
+		sql.append(ID_PAGAMENTO);
+		sql.append(AUTO_INCREMENT);
+		sql.append(NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(ID_PEDIDO);
+		sql.append(INT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(DATA_REGISTRO);// data
+		sql.append(DATE_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(TELEFONE);
+		sql.append(TEXT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(ID_FORMA_PAGAMENTO);// data
+		sql.append(INT_NOT_NULL);
+		sql.append(VIRGULA);
+
+		sql.append(PRIMARY_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(FECHA_PARENTESES);
+
+		sql.append(VIRGULA);
+
+		sql.append(FOREIGN_KEY);
+		sql.append(ABRE_PARENTESES);
+		sql.append(TELEFONE);//
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(FECHA_PARENTESES);
+		sql.append(REFERENCES);
+		sql.append(TABELA_PEDIDO_DTO);
+		sql.append(ABRE_PARENTESES);
+
+		sql.append(TELEFONE);
+		sql.append(VIRGULA);
+		sql.append(ID_PEDIDO);
+		sql.append(FECHA_PARENTESES);
 		sql.append(FECHA_PARENTESES);
 
 		System.out.println("Comando criar tabela: " + sql);

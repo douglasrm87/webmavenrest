@@ -2,17 +2,12 @@ package br.com.bottelegram.comando;
 
 import java.util.Calendar;
 
-import org.apache.log4j.Logger;
-
 import bancodedados.dto.CentralMensagensBrewField;
-import br.com.bottelegram.comando.brewfield.ComandoCarrinho;
+import bancodedados.dto.ClienteDTO;
+import bancodedados.dto.MenuGrafico;
 import br.com.bottelegram.comando.dto.InteracaoComando;
 
 public abstract class CentralComando {
-
-	// A partir deste método para cada solicitação feita pelo usuário teremos um
-	// retorno especifico.
-	protected abstract String processarComando(InteracaoComando dadosComando);
 
 	protected String iniciarTexto(String nomeUsuario, String vetOpcoes[], boolean msgBemVindo, boolean saudacaoFecha) {
 		StringBuilder msg = new StringBuilder();
@@ -20,7 +15,7 @@ public abstract class CentralComando {
 			msg.append(saudacaoTempo() + nomeUsuario + CentralMensagensBrewField.SAUDACAO);
 		} else {
 			if (saudacaoFecha) {
-				msg.append(CentralMensagensBrewField.PULAR_LINHA + CentralMensagensBrewField.PULAR_LINHA + nomeUsuario
+				msg.append(CentralMensagensBrewField.PULAR_LINHA + "<b>" + nomeUsuario + "</b>"
 						+ CentralMensagensBrewField.SAUDACAO_FECHAMENTO);
 			}
 		}
@@ -43,58 +38,62 @@ public abstract class CentralComando {
 		}
 	}
 
-	protected String menuAposEscolhaPagamento(String nomeUsuario, String sobreNomeUsuario) {
-		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesAposPagamento, false, false);
-	}
+//	protected String menuAposEscolhaPagamento(String nomeUsuario, String sobreNomeUsuario) {
+//		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesAposPagamento, false, false);
+//	}
 
-	protected String menuFechamento(String nomeUsuario, String sobreNomeUsuario) {
-		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesFechamento, false, false);
-	}
+//	protected String menuFechamento(String nomeUsuario) {
+//		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesFechamento, false, false);
+//	}
 
 	protected String refazerlogin(InteracaoComando dadosComando) {
 		StringBuilder msg = new StringBuilder();
 		msg.append(CentralMensagensBrewField.REALIZAR_LOGIN_E_ESCOLHER_SEU_GROWLER);
 		dadosComando.setComplementoComando(null);
-		msg.append(menuSomenteLogin(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
+		msg.append(menuSomenteLogin(dadosComando.getNome()));
 		return msg.toString();
 	}
 
 	protected String jaLogadoContinuar(InteracaoComando dadosComando) {
 		StringBuilder msg = new StringBuilder();
 		dadosComando.setComplementoComando(null);
-		msg.append(iniciarTexto(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
+		msg.append(iniciarTexto(dadosComando.getNome()));
 		return msg.toString();
 	}
 
-	protected String iniciarTextoEstilos(String nomeUsuario, String sobreNomeUsuario) {
-		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesBrewField, false, false);
+	protected void iniciarTextoEstilos(ClienteDTO clienteTelegram) {
+		MenuGrafico menu = new MenuGrafico();
+		menu.botoesEstilosCervejasLinhasDin(clienteTelegram.getIdUsuarioTelegram());
 	}
 
-	protected String iniciarTexto(String nomeUsuario, String sobreNomeUsuario) {
+	protected String iniciarTexto(String nomeUsuario) {
 		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesParcial, true, false);
 	}
-	protected String menuSomenteLogin(String nomeUsuario, String sobreNomeUsuario) {
+
+	protected String menuSomenteLogin(String nomeUsuario) {
 		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetSomenteLogin, true, false);
 	}
 
-	protected String menuJaLogadoContinuar(String nomeUsuario, String sobreNomeUsuario) {
-		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesJaLogadoContinuar, true, false);
+	protected void menuJaLogadoContinuar(ClienteDTO clienteTelegram) {
+		MenuGrafico menu = new MenuGrafico();
+		menu.zerarBotoesBaixo(clienteTelegram.getIdUsuarioTelegram());
+		menu.menuOpcoesGrafico(clienteTelegram.getIdUsuarioTelegram());
 	}
+ 
 
-	protected String menuUsuarioCadastrado(String nomeUsuario, String sobreNomeUsuario) {
-		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesUsuarioJaCadastrado, false, false);
-	}
-
-	protected String apresentarMenuFecharPedido(String nomeUsuario, String sobreNomeUsuario) {
+	protected String apresentarMenuFecharPedido(String nomeUsuario) {
 		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesCompleto, false, true);
 	}
 
-	protected String iniciarTextoNoLogin(String nomeUsuario, String sobreNomeUsuario) {
-		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesNoLogin, false, false);
-	}
+//	protected String iniciarTextoNoLogin(String nomeUsuario) {
+//		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesNoLogin, false, false);
+//	}
 
-	protected String menuPagamento(String nomeUsuario, String sobreNomeUsuario) {
-		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesPagamento, false, false);
+	protected void menuPagamento(ClienteDTO clienteTelegram) {
+		MenuGrafico menu = new MenuGrafico();
+		menu.zerarBotoesBaixo(clienteTelegram.getIdUsuarioTelegram());
+		menu.botoesFormasPAgamento(clienteTelegram.getIdUsuarioTelegram());
+
 	}
 
 }

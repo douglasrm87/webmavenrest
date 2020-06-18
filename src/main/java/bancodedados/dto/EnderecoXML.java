@@ -43,6 +43,7 @@ public class EnderecoXML {
 			try (InputStreamReader tArq1 = new InputStreamReader(tInput);
 					BufferedReader tArq2 = new BufferedReader(tArq1);) {
 				while (true) {
+
 					tLinha = tArq2.readLine();
 					if (tLinha == null) {
 						break;

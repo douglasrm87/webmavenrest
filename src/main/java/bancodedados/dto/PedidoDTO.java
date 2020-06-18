@@ -6,58 +6,98 @@ import java.util.List;
 
 public class PedidoDTO {
 	private int idPedido;// autoincrement
-	private Date dataPedido = new Date();
-	private long cpfCliente;//chave estrangeira
+
+	private String telefone;// chave estrangeira
 	private double valorTotalPedido = 0.0;
+	private int estadoPedido; // 0 aberto 1 fechado
+	private Date dataPedido = new Date();
+
+	private String urlRecibo; // pode ser nulo no banco
 	private List<ItemPedidoDTO> listaItens = new ArrayList<>();
-	private FormaPagamentoDTO pagamento;
-	private String urlRecibo;
-	
-	
+	private FormasPagamento pagamento;
+	private ClienteDTO cliente;
+
+	public PedidoDTO(String telefone, double valorTotalPedido, int estadoPedido) {
+		super();
+		this.telefone = telefone;
+		this.valorTotalPedido = valorTotalPedido;
+		this.estadoPedido = estadoPedido;
+		
+	}
+
+	public PedidoDTO(String telefone, int estadoPedido ) {
+		super();
+		this.telefone = telefone;
+		this.estadoPedido = estadoPedido;
+ 
+	}
+	public PedidoDTO() {}
+	public String getTelefone() {
+		return this.telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public int getEstadoPedido() {
+		return this.estadoPedido;
+	}
+
+	public void setEstadoPedido(int estadoPedido) {
+		this.estadoPedido = estadoPedido;
+	}
+
 	public String getUrlRecibo() {
 		return this.urlRecibo;
 	}
+
 	public void setUrlRecibo(String urlRecibo) {
 		this.urlRecibo = urlRecibo;
 	}
+
 	public int getIdPedido() {
 		return this.idPedido;
 	}
+
 	public void setIdPedido(int idPedido) {
 		this.idPedido = idPedido;
 	}
+
 	public Date getDataPedido() {
 		return this.dataPedido;
 	}
+
 	public void setDataPedido(Date dataPedido) {
 		this.dataPedido = dataPedido;
 	}
-	public long getCpfCliente() {
-		return this.cpfCliente;
-	}
-	public void setCpfCliente(long cpfCliente) {
-		this.cpfCliente = cpfCliente;
-	}
+
 	public double getValorTotalPedido() {
 		return this.valorTotalPedido;
 	}
+
 	public void setValorTotalPedido(double valorTotalPedido) {
 		this.valorTotalPedido = valorTotalPedido;
 	}
+
 	public List<ItemPedidoDTO> getListaItens() {
 		return this.listaItens;
 	}
+
 	public void setListaItens(List<ItemPedidoDTO> listaItens) {
 		this.listaItens = listaItens;
 	}
-	public FormaPagamentoDTO getPagamento() {
+
+	public FormasPagamento getPagamento() {
 		return this.pagamento;
 	}
-	public void setPagamento(FormaPagamentoDTO pagamento) {
+
+	public void setPagamento(FormasPagamento pagamento) {
 		this.pagamento = pagamento;
 	}
-	public PedidoDTO(long cpfCliente) {
+
+	public PedidoDTO(String telefone) {
 		super();
-		this.cpfCliente = cpfCliente;
+		this.telefone = telefone;
 	}
 }

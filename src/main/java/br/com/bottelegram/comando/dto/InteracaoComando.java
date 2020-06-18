@@ -1,23 +1,74 @@
 package br.com.bottelegram.comando.dto;
 
+import java.util.Arrays;
+
 import com.pengrad.telegrambot.model.Contact;
 import com.pengrad.telegrambot.model.PhotoSize;
 
 import bancodedados.dto.ClienteDTO;
 
 public class InteracaoComando {
-	private Long idUsuario;
-	private String nomeUsuario;
-	private String sobreNomeUsuario;
 	private int idComando;
 	private String complementoComando;
-	private ClienteDTO cliente;
+	private String nome;
+	private long idUsuarioTelegram;
+	private String sobreNome = "";
 	private boolean enviadoFoto = false;
 	private String urlRecibo;
 	private Contact meuContato;
+	private PhotoSize[] fotoPagamento;
+
+ 	
+	
+	public InteracaoComando(int idComando, String complementoComando, String nome, long idUsuarioTelegram,
+			String sobreNome) {
+		super();
+		this.idComando = idComando;
+		this.complementoComando = complementoComando;
+		this.nome = nome;
+		this.idUsuarioTelegram = idUsuarioTelegram;
+		this.sobreNome = sobreNome;
+	}
+
+	public PhotoSize[] getFotoPagamento() {
+		return this.fotoPagamento;
+	}
+
+	public void setFotoPagamento(PhotoSize[] fotoPagamento) {
+		this.fotoPagamento = fotoPagamento;
+	}
+
+	public long getIdUsuarioTelegram() {
+		return this.idUsuarioTelegram;
+	}
+
+	public void setIdUsuarioTelegram(long idUsuarioTelegram) {
+		this.idUsuarioTelegram = idUsuarioTelegram;
+	}
+
+	public String getNome() {
+		return this.nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getSobreNome() {
+		return this.sobreNome;
+	}
+
+	public void setSobreNome(String sobreNome) {
+		this.sobreNome = sobreNome;
+	}
 
 	public Contact getMeuContato() {
 		return this.meuContato;
+	}
+
+	public InteracaoComando( ) {
+		super();
+	 
 	}
 
 	public void setMeuContato(Contact meuContato) {
@@ -25,8 +76,7 @@ public class InteracaoComando {
 	}
 
 	public void reiniciarDados () {
-		this.cliente = null;
-		this.enviadoFoto = false;
+ 		this.enviadoFoto = false;
 		this.urlRecibo = new String();
 	}
 	
@@ -46,30 +96,6 @@ public class InteracaoComando {
 		this.enviadoFoto = enviadoFoto;
 	}
 
-	public String getSobreNomeUsuario() {
-		return this.sobreNomeUsuario;
-	}
-
-	public void setSobreNomeUsuario(String sobreNomeUsuario) {
-		this.sobreNomeUsuario = sobreNomeUsuario;
-	}
-
-	public Long getIdUsuario() {
-		return this.idUsuario;
-	}
-
-	public void setIdUsuario(Long idUsuario) {
-		this.idUsuario = idUsuario;
-	}
-
-	public String getNomeUsuario() {
-		return this.nomeUsuario;
-	}
-
-	public void setNomeUsuario(String nomeUsuario) {
-		this.nomeUsuario = nomeUsuario;
-	}
-
 	public int getIdComando() {
 		return this.idComando;
 	}
@@ -86,35 +112,13 @@ public class InteracaoComando {
 		this.complementoComando = complementoComando;
 	}
 
-	public InteracaoComando(Long idUsuario, String nomeUsuario, String sobreNomeUsuario, int idComando,
-			String complementoComando, ClienteDTO cliente) {
-		super();
-		this.idUsuario = idUsuario;
-		this.nomeUsuario = nomeUsuario;
-		this.sobreNomeUsuario = sobreNomeUsuario;
-		this.idComando = idComando;
-		this.complementoComando = complementoComando;
-		this.cliente = cliente;// utiliado quando temos cliente cadastrado
+	@Override
+	public String toString() {
+		return "InteracaoComando [idComando=" + this.idComando + ", complementoComando=" + this.complementoComando + ", nome="
+				+ this.nome + ", idUsuarioTelegram=" + this.idUsuarioTelegram + ", sobreNome=" + this.sobreNome + ", enviadoFoto="
+				+ this.enviadoFoto + ", urlRecibo=" + this.urlRecibo + ", meuContato=" + this.meuContato + ", fotoPagamento="
+				+ Arrays.toString(this.fotoPagamento) + "]";
 	}
-
-	// utiliado quando NÃO temos cliente cadastrado
-	public InteracaoComando(Long idUsuario, String nomeUsuario, String sobreNomeUsuario, int idComando,
-			String complementoComando) {
-		super();
-		this.idUsuario = idUsuario;
-		this.nomeUsuario = nomeUsuario;
-		this.sobreNomeUsuario = sobreNomeUsuario;
-		this.idComando = idComando;
-		this.complementoComando = complementoComando;
-
-	}
-
-	public ClienteDTO getCliente() {
-		return this.cliente;
-	}
-
-	public void setCliente(ClienteDTO cliente) {
-		this.cliente = cliente;
-	}
+ 
 
 }

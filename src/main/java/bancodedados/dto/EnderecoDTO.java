@@ -1,23 +1,46 @@
 package bancodedados.dto;
 
+import bancodedados.PostgreSQLJDBCClienteDML;
+
 //http://cep.republicavirtual.com.br/web_cep.php?cep=17514520&formato=xml
 //http://cep.republicavirtual.com.br/web_cep.php?cep=80050350&formato=txt
 public class EnderecoDTO {
-	private int resultado;
-	private String resultado_txt;
+	private int resultado;// transient
+	private String mensagem;// transient
+	private String resultado_txt;// transient
 	private String uf;
 	private String cidade;
 	private String bairro;
 	private String tipo_logradouro;
 	private String logradouro;
 	private String numero;
-	private String mensagem;
+	private String cep;
+	private String telefone;
+	private String complemento;// transiente
+	private ClienteDTO cliente;
+
+	public String getCep() {
+		return this.cep;
+	}
 
 	public EnderecoDTO() {
-		
+
 	}
+
+	public EnderecoDTO(String compl, ClienteDTO cliente) throws Exception {
+		this.complemento = compl;
+		this.cliente = cliente;
+		processarCEP();
+		PostgreSQLJDBCClienteDML cadend = new PostgreSQLJDBCClienteDML();
+		cadend.inserirEnderecoDTO(cliente, this);
+	}
+
+	public EnderecoDTO(String telefone) {
+		this.telefone = telefone;
+	}
+
 	public String getMensagem() {
-		return mensagem;
+		return this.mensagem;
 	}
 
 	public void setMensagem(String mensagem) {
@@ -80,9 +103,14 @@ public class EnderecoDTO {
 		this.logradouro = logradouro;
 	}
 
-	public EnderecoDTO(String uf, String cidade, String bairro, String tipo_logradouro, String logradouro,
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public EnderecoDTO(String cep, String uf, String cidade, String bairro, String tipo_logradouro, String logradouro,
 			String numero) {
 		super();
+		this.cep = cep;
 		this.uf = uf;
 		this.cidade = cidade;
 		this.bairro = bairro;
@@ -93,8 +121,8 @@ public class EnderecoDTO {
 
 	@Override
 	public String toString() {
-		return this.tipo_logradouro + " " + this.logradouro + ", " + this.numero + " " + this.bairro + " " + this.cidade
-				+ "-" + this.uf;
+		return this.cep + " " + this.tipo_logradouro + " " + this.logradouro + ", " + this.numero + " " + this.bairro
+				+ " " + this.cidade + "-" + this.uf;
 	}
 
 	public String getNumero() {
@@ -104,5 +132,55 @@ public class EnderecoDTO {
 	public void setNumero(String numero) {
 		this.numero = numero;
 	}
- 
+
+	public String getTelefone() {
+		return this.telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	private void validarIntervaloCep(String cepLocal) throws Exception {
+		String strCEP = cepLocal.substring(0, 5);
+		System.out.println("CEP substring: " + strCEP);
+		int cepInt = 0;
+		try {
+			cepInt = Integer.parseInt(strCEP);
+			if (cepInt < 80000 || cepInt > 82999) {
+				throw new Exception(CentralMensagensBrewField.CEP_NAO_CURITIBA);
+			}
+		} catch (Exception e) {
+			throw new Exception(CentralMensagensBrewField.CEP_FORMATO_INVALIDO);
+		}
+		this.cep = cepLocal;
+	}
+
+	private void processarCEP() throws Exception {
+		String strVet[] = this.complemento.split(",");
+		if (strVet.length == 2) {
+			strVet[0] = strVet[0].replaceAll(" ", "");
+			if (strVet[0].contains("-")) {
+				strVet[0] = strVet[0].replaceAll("-", "");
+			}
+			EnderecoXML endXML = new EnderecoXML();
+			EnderecoDTO endDTO = endXML.carregarDadosArqXML(strVet[0]);
+			if (endDTO.getMensagem() != null && endDTO.getMensagem().length() > 0) {
+				throw new Exception(getMensagem());
+			} else {
+				endDTO.setNumero(strVet[1]);
+				endDTO.validarIntervaloCep(strVet[0]);
+				this.uf = endDTO.getUf();
+				this.cidade = endDTO.getCidade();
+				this.bairro = endDTO.getBairro();
+				this.tipo_logradouro = endDTO.getTipo_logradouro();
+				this.logradouro = endDTO.getLogradouro();
+				this.numero = endDTO.getNumero();
+				this.cep = strVet[0];
+				this.telefone = this.cliente.getTelefone();
+			}
+		} else {
+			throw new Exception(CentralMensagensBrewField.FORMATO_INCORRETO);
+		}
+	}
 }

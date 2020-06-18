@@ -10,7 +10,7 @@ import java.util.TimerTask;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 import br.com.bottelegram.comando.dto.GestaoAtendimento;
 import br.com.bottelegram.comando.dto.InteracaoComando;
 import br.com.bottelegram.comando.dto.VPNConectadaExcel;
@@ -23,7 +23,9 @@ import br.com.bottelegram.comando.dto.VPNConectadaExcel;
 @ApplicationScoped
 @ManagedBean(name = "telegram", eager = true)
 public class EscopoApplictCSCTimerTelegram implements Serializable {
-	private static final Logger logger = Logger.getLogger(EscopoApplictCSCTimerTelegram.class);
+	private static final String INICIANDO_CSC_BOT_TELEGRAM = "Iniciando CSC BOT Telegram.";
+	private static final String ASTERICS = "***********************************";
+//	private static final Logger logger = Logger.getLogger(EscopoApplictCSCTimerTelegram.class);
 	private static final long serialVersionUID = 1L;
 	private int delay = 4000; // delay de 4 seg.
 	private int interval = 4000; // intervalo de 4 seg.
@@ -35,10 +37,14 @@ public class EscopoApplictCSCTimerTelegram implements Serializable {
 
 	@PostConstruct
 	public void iniciarOuvinteTelegram() {
-		logger.info("***********************************");
-		logger.info("Iniciando CSC BOT Telegram.");
-		logger.info("***********************************");
+		System.out.println(ASTERICS);
+		System.out.println(INICIANDO_CSC_BOT_TELEGRAM);
+		System.out.println(ASTERICS);
+//		logger.info(ASTERICS);
+//		logger.info(INICIANDO_CSC_BOT_TELEGRAM);
+//		logger.info(ASTERICS);
 
+		
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {

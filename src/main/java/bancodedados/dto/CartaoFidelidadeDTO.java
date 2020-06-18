@@ -3,39 +3,51 @@ package bancodedados.dto;
 import java.util.Date;
 
 public class CartaoFidelidadeDTO {
-	private int idCartao;
-	private Date dataInclusao;
-	private long cpfCliente;
-	 
-	public CartaoFidelidadeDTO() { }
-	public CartaoFidelidadeDTO(Date dataInclusao, long cpfCliente) {
-		super();
-		this.dataInclusao = dataInclusao;
-		this.cpfCliente = cpfCliente;
-	}
+	private int idPedido;
+	private int idBonus;
+	private String telefone;
+	
+	private int estadoSeloCartao = 0; // 0 nao consumido/aberto, 1 consumido/fechado.
+	private Date dataInclusao = new Date();
+	private Date dataVencimento = new Date();
  
-	public long getCpfCliente() {
-		return this.cpfCliente;
+	public int getIdPedido() {
+		return this.idPedido;
 	}
-
-	public void setCpfCliente(long cpfCliente) {
-		this.cpfCliente = cpfCliente;
+	public void setIdPedido(int idPedido) {
+		this.idPedido = idPedido;
 	}
- 
+	public int getIdBonus() {
+		return this.idBonus;
+	}
+	public void setIdBonus(int idBonus) {
+		this.idBonus = idBonus;
+	}
+	public String getTelefone() {
+		return this.telefone;
+	}
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+	public int getEstadoSeloCartao() {
+		return this.estadoSeloCartao;
+	}
+	public void setEstadoSeloCartao(int estadoSeloCartao) {
+		this.estadoSeloCartao = estadoSeloCartao;
+	}
 	public Date getDataInclusao() {
 		return this.dataInclusao;
 	}
-
 	public void setDataInclusao(Date dataInclusao) {
 		this.dataInclusao = dataInclusao;
 	}
-
-	public int getIdCartao() {
-		return this.idCartao;
+	public Date getDataVencimento() {
+		return this.dataVencimento;
 	}
-
-	// Por se auto increment não faz sentido ter o metodo set...
-//	public void setIdCartao(int idCartao) {
-//		this.idCartao = idCartao;
-//	}
+	public void setDataVencimento(Date dataVencimento) {
+		this.dataVencimento = dataVencimento;
+	}
+	
+	 
+ 
 }

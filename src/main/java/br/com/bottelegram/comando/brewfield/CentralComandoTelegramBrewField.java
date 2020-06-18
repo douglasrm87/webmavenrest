@@ -1,10 +1,14 @@
 package br.com.bottelegram.comando.brewfield;
 
-import org.apache.log4j.Logger;
+import bancodedados.PostgreSQLJDBCClienteDML;
+import bancodedados.PostgreSQLJDBCPedidoDML;
+
+//import org.apache.log4j.Logger;
 
 import bancodedados.dto.CentralMensagensBrewField;
 import bancodedados.dto.ClienteDTO;
-import bancodedados.dto.LoginDTO;
+import bancodedados.dto.EnderecoDTO;
+import bancodedados.dto.MenuGrafico;
 import br.com.bottelegram.comando.CentralComando;
 import br.com.bottelegram.comando.dto.InteracaoComando;
 
@@ -18,7 +22,7 @@ Data: Tue May 12 10:53:35 BRT 2020
  */
 public class CentralComandoTelegramBrewField extends CentralComando {
 
-	private static final Logger logger = Logger.getLogger(CentralComandoTelegramBrewField.class);
+//	private static final Logger logger = Logger.getLogger(CentralComandoTelegramBrewField.class);
 
 	public static void main(String[] args) {
 		CentralComandoTelegramBrewField obj = new CentralComandoTelegramBrewField();
@@ -29,155 +33,119 @@ public class CentralComandoTelegramBrewField extends CentralComando {
 
 	// A partir deste método para cada solicitação feita pelo usuário teremos um
 	// retorno especifico.
-	@Override
-	public String processarComando(InteracaoComando dadosComando) {
+
+	public String processarComando(InteracaoComando dadosComando, ClienteDTO clienteTelegram) {
 		StringBuilder msg = new StringBuilder();
+
+		System.out.println("dadosComando.getIdComando(): " + dadosComando.getIdComando());
+		MenuGrafico menu = new MenuGrafico();
 
 		switch (dadosComando.getIdComando()) {
 		case CentralMensagensBrewField.ID_LOGIN:
-			ComandoLogin login = new ComandoLogin();
-			if (dadosComando.getComplementoComando() != null && dadosComando.getCliente() != null) {
-				LoginDTO res = login.processarLogin(dadosComando);
-				msg.append(res.getMensagem());
-				if (msg.toString().equalsIgnoreCase(CentralMensagensBrewField.FORMATO_INCORRETO) || !res.isSucesso()) {
-					msg.append(refazerlogin(dadosComando));
-					dadosComando.setComplementoComando(null);
-					return msg.toString();
 
-				} else if (CentralMensagensBrewField.AL_DADOS_CLIENTE
-						.equalsIgnoreCase(dadosComando.getComplementoComando())) {
-					dadosComando.reiniciarDados();
-					msg.append(CentralMensagensBrewField.DADOS_CADASTRAISREMOVIDOS);
-					msg.append(login.processarLogin());
-					return msg.toString();
-				} else if (CentralMensagensBrewField.VL.equalsIgnoreCase(dadosComando.getComplementoComando())) {
-					dadosComando.setComplementoComando(null);
-				}
-				msg.append(iniciarTextoNoLogin(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
-				dadosComando.setComplementoComando(null);
-			} else {
-				// usuario ja cadastrado
-				if (dadosComando.getCliente() != null) {
-					msg.append(login.processarLogado(dadosComando.getCliente()));
+			if (dadosComando.getComplementoComando() != null) {
+				// cadastrar endereco
+				if (clienteTelegram != null && clienteTelegram.getEndereco() == null) {
+					try {
+						EnderecoDTO endereco = new EnderecoDTO(dadosComando.getComplementoComando(), clienteTelegram);
+						msg.append(CentralMensagensBrewField.CADASTRADO_COM_SUCESSO);
+						msg.append(endereco.toString());
+						msg.append(CentralMensagensBrewField.PULAR_LINHA);
+						menuJaLogadoContinuar(clienteTelegram);
 
+					} catch (Exception e) {
+						System.out.println(e.toString());
+						msg.append(CentralMensagensBrewField.INFORMADO_TELEFONE);
+					}
 				} else {
-					msg.append(login.processarLogin());
+					if (clienteTelegram != null && clienteTelegram.getEndereco() != null) {
+
+						menuJaLogadoContinuar(clienteTelegram);
+					}
 				}
 			}
 			break;
 		case CentralMensagensBrewField.ID_ADICIONAR_PEDIDO:
-			ComandoRealizarPedido realizPed = new ComandoRealizarPedido();
-			if (dadosComando.getComplementoComando() != null) {
-				if (dadosComando.getCliente() != null) {
-					msg.append(realizPed.processarPedido(dadosComando));
-					if (msg.length() > 0) {
-						// aqui reapreentar menu de cervejas
-						msg.append(
-								iniciarTextoEstilos(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
-					} else {// escolheu voltar
-						/*
-						 * Apos voltar ao menu deveria mostrar só uma mensagem: Jeann, confirme seu
-						 * pedido ou continue comprando. 2 - Continuar comprando 3 - Selecionar forma de
-						 * pagamento 4 - Ver carrinho de compras 5 - Cancelar pedido
-						 */
-						msg.append(apresentarMenuFecharPedido(dadosComando.getNomeUsuario(),
-								dadosComando.getSobreNomeUsuario()));
+			if (clienteTelegram != null) {
+				if (dadosComando.getComplementoComando().contains(CentralMensagensBrewField.ADD)
+						|| dadosComando.getComplementoComando().contains(CentralMensagensBrewField.REM)) {
+					ComandoRealizarPedido realizPed = new ComandoRealizarPedido();
+					String ret = realizPed.processarPedido(dadosComando, clienteTelegram);
+					msg.append(ret);
+					if (ret == null) {
+						// botoe de baixo com os estilos da cerveja.
+						iniciarTextoEstilos(clienteTelegram);
 					}
-					// para evitar que se eu digitar 2 ele readicione a mesma cerveja
-					dadosComando.setComplementoComando(null);
 				} else {
-					msg.append(refazerlogin(dadosComando));
+					iniciarTextoEstilos(clienteTelegram);
 				}
-			} else {
-				if (dadosComando.getCliente() != null) {
-					msg.append(realizPed.processarPedido());
-					msg.append(iniciarTextoEstilos(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
-				} else {
-					msg.append(refazerlogin(dadosComando));
-				}
+
 			}
+
 			break;
 		case CentralMensagensBrewField.ID_VER_CARRINHO:
-			ComandoVerCarrinho verCarrinho = new ComandoVerCarrinho();
-			String ret = verCarrinho.apresentarCarrinho(dadosComando);
-			msg.append(definirMenuProximo(ret, dadosComando));
-
+			if (clienteTelegram != null && clienteTelegram.getPedido() != null) {
+				ComandoVerCarrinho verCarrinho = new ComandoVerCarrinho();
+				String ret = verCarrinho.apresentarCarrinho(clienteTelegram);
+				msg.append(ret);
+				menu.zerarBotoesBaixo(dadosComando.getIdUsuarioTelegram());
+			} else {
+				msg.append(CentralMensagensBrewField.COMECE_A_COMPRAR);
+			}
 			break;
 
 		case CentralMensagensBrewField.ID_SELECIONAR_PAGAMENTO:
-			ComandoSelecionarPagamento selPagamento = new ComandoSelecionarPagamento();
-			msg.append(selPagamento.processarSelecionarPagamento(dadosComando));
-			break;
-
-		case CentralMensagensBrewField.ID_CANCELAR_PEDIDO:
-			if (dadosComando.getCliente() != null) {
-				dadosComando.getCliente().setPedido(null);
-				msg.append(iniciarTextoNoLogin(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
+			if (clienteTelegram != null && clienteTelegram.getPedido() != null) {
+				ComandoSelecionarPagamento selPagamento = new ComandoSelecionarPagamento();
+				msg.append(selPagamento.processarSelecionarPagamento(dadosComando, clienteTelegram));
 			} else {
-				msg.append(definirMenuProximo(null, dadosComando));
+				msg.append(CentralMensagensBrewField.COMECE_A_COMPRAR);
 			}
-			break;
 
-		case CentralMensagensBrewField.ID_CONFIRMAR_PEDIDO:
-			ComandoConfirmarPedido confPedido = new ComandoConfirmarPedido();
-			msg.append(confPedido.processarConfirmarPedido(dadosComando));
-			msg.append(confPedido.apresentarCarrinho(dadosComando));
-			msg.append(CentralMensagensBrewField.PEDIDO_FINALIZADO);
-			msg.append(menuUsuarioCadastrado(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
+			break;
+ 		case CentralMensagensBrewField.ID_CONFIRMAR_PEDIDO:
+			if (clienteTelegram != null && clienteTelegram.getPedido() != null) {
+				if (clienteTelegram.getPedido().getPagamento() != null) {
+					ComandoConfirmarPedido confPedido = new ComandoConfirmarPedido();
+//					msg.append(confPedido.processarConfirmarPedido(dadosComando, clienteTelegram));
+					msg.append(CentralMensagensBrewField.PEDIDO_FINALIZADO);
+					// Aqui precisamos tornar o pedido fechado, dar update no pedido e itens.
+					PostgreSQLJDBCPedidoDML fechar = new PostgreSQLJDBCPedidoDML();
+					fechar.fecharPedidoCliente(clienteTelegram);
+				} else {
+					msg.append(CentralMensagensBrewField.FALTOU_ESCOLHER_PAGAMENTO);
+				}
+			}
+
 			break;
 		case CentralMensagensBrewField.ID_ALTERAR_DADOS:
 			dadosComando.reiniciarDados();
 			msg.append(CentralMensagensBrewField.DADOS_CADASTRAISREMOVIDOS);
-			login = new ComandoLogin();
-			msg.append(login.processarLogin());
+			PostgreSQLJDBCClienteDML delEnd = new PostgreSQLJDBCClienteDML();
+			delEnd.removerEndereco(clienteTelegram.getEndereco());
+			msg.append(CentralMensagensBrewField.INFORMADO_TELEFONE);
 			dadosComando.setIdComando(CentralMensagensBrewField.ID_LOGIN);
-			break;
-		case CentralMensagensBrewField.ID_VOLTAR:
-			msg.append(iniciarTexto(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
 			break;
 
 		default:
-			if (dadosComando.getCliente() != null) {
-				msg.append(CentralMensagensBrewField.INFORMAR_JA_CADASTRADO);
-				msg.append(menuUsuarioCadastrado(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
+			if (clienteTelegram != null && clienteTelegram.getEndereco() != null) {
+				msg.append(CentralMensagensBrewField.INFORMAR_CLIENTE_ENDERECO_CADASTRADO);
+				menuJaLogadoContinuar(clienteTelegram);
 			} else {
-				if (dadosComando.getMeuContato() != null) {
-					ClienteDTO cli = new ClienteDTO(
-							dadosComando.getNomeUsuario() + " " + dadosComando.getSobreNomeUsuario(),
-							dadosComando.getMeuContato().phoneNumber());
-					dadosComando.setCliente(cli);
+				if (dadosComando.getMeuContato() != null && clienteTelegram == null) {
+					ClienteDTO cli = new ClienteDTO(dadosComando.getNome() + " " + dadosComando.getSobreNome(),
+							dadosComando.getMeuContato().phoneNumber(), dadosComando.getIdUsuarioTelegram());
 					dadosComando.setIdComando(CentralMensagensBrewField.ID_LOGIN);
-					msg.append(menuSomenteLogin(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
-				}
-			}
-
-			break;
-		}
-		return msg.toString();
-
-	}
-
-	private String definirMenuProximo(String ret, InteracaoComando dadosComando) {
-		StringBuilder msg = new StringBuilder();
-
-		if (ret != null && ret.length() > 0 && dadosComando.getComplementoComando() == null) {
-			msg.append(ret);
-		}
-		if (dadosComando.getCliente() != null && dadosComando.getCliente().getPedido() != null
-				&& dadosComando.getCliente().getPedido().getPagamento() != null) {
-			msg.append(menuFechamento(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
-		} else {
-			if (dadosComando.getCliente() != null && dadosComando.getCliente().getPedido() != null) {
-				msg.append(
-						apresentarMenuFecharPedido(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
-			} else {
-				if (dadosComando.getCliente() != null) {
-					msg.append(
-							menuJaLogadoContinuar(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
+					msg.append(menuSomenteLogin(cli.getNomeCliente()));
+					menu.zerarBotoesBaixo(dadosComando.getIdUsuarioTelegram());
 				} else {
-					msg.append(menuSomenteLogin(dadosComando.getNomeUsuario(), dadosComando.getSobreNomeUsuario()));
+					if (clienteTelegram != null) {
+						msg.append(CentralMensagensBrewField.INFORMADO_TELEFONE);
+						dadosComando.setIdComando(CentralMensagensBrewField.ID_LOGIN);
+					}
 				}
 			}
+			break;
 		}
 		return msg.toString();
 	}

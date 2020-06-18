@@ -2,18 +2,21 @@ package br.com.bottelegram.comando.brewfield;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import bancodedados.PostgreSQLJDBCPedidoDML;
 import bancodedados.dto.CentralMensagensBrewField;
+import bancodedados.dto.ClienteDTO;
 import bancodedados.dto.ItemPedidoDTO;
+import bancodedados.dto.MenuGrafico;
 import bancodedados.dto.PedidoDTO;
-import br.com.bottelegram.EscopoApplictCSCTimerTelegram;
+import bancodedados.dto.ProdutoBebida;
 import br.com.bottelegram.comando.dto.InteracaoComando;
 
 public class ComandoRealizarPedido {
 
-	
 	private static final Logger logger = Logger.getLogger(ComandoRealizarPedido.class);
 
 	public String processarPedido() {
@@ -22,77 +25,90 @@ public class ComandoRealizarPedido {
 		return msg.toString();
 	}
 
-	public String processarPedido(InteracaoComando dadosComando) {
+	public String processarPedido(InteracaoComando dadosComando, ClienteDTO clienteTelegram) {
 		StringBuilder msg = new StringBuilder();
-
+		MenuGrafico menu = new MenuGrafico();
+		List<ProdutoBebida> listaCervejas = menu.carregarProdutoCerveja();
 		double valor = 0.0;
 		String estiloEscolhido = new String();
 		boolean estiloValido = false;
-		if (CentralMensagensBrewField.GG.equalsIgnoreCase(dadosComando.getComplementoComando())) {
-			valor = CentralMensagensBrewField.VALOR_PILSEN;
-			estiloEscolhido = CentralMensagensBrewField.GELA_GOELA;
-			estiloValido = true;
+		String meuPedido[] = dadosComando.getComplementoComando().split("-");
+		if (meuPedido != null && meuPedido.length == 3) {
+			for (ProdutoBebida produto : listaCervejas) {
+				if (meuPedido[1].equalsIgnoreCase(produto.getDescricaoCurta())) {
+					if (CentralMensagensBrewField.ADD.equals(meuPedido[0])) {
+						valor = produto.getValorLitro();
+						estiloEscolhido = produto.getDescricaoCurta();
+						estiloValido = true;
+						break;
+					}
+					if (CentralMensagensBrewField.REM.equals(meuPedido[0])) {
+						valor = produto.getValorLitro() * -1;
+						estiloEscolhido = produto.getDescricaoCurta();
+						estiloValido = true;
+						break;
+					}
+				}
+			}
 		}
-		if (CentralMensagensBrewField.RD.equalsIgnoreCase(dadosComando.getComplementoComando())) {
-			valor = CentralMensagensBrewField.VALOR_RED;
-			estiloEscolhido = CentralMensagensBrewField.RED_ALE;
-			estiloValido = true;
-		}
-		if (CentralMensagensBrewField.AP.equalsIgnoreCase(dadosComando.getComplementoComando())) {
-			valor = CentralMensagensBrewField.VALOR_APA;
-			estiloEscolhido = CentralMensagensBrewField.BREAK_DOWN_APA;
-			estiloValido = true;
-		}
-		if (CentralMensagensBrewField.PT.equalsIgnoreCase(dadosComando.getComplementoComando())) {
-			valor = CentralMensagensBrewField.VALOR_PORTER;
-			estiloEscolhido = CentralMensagensBrewField.BLACK_SAILS;
-			estiloValido = true;
-		}
-		if (CentralMensagensBrewField.IP.equalsIgnoreCase(dadosComando.getComplementoComando())) {
-			valor = CentralMensagensBrewField.VALOR_IPA;
-			estiloEscolhido = CentralMensagensBrewField.BREAK_DOWN_IPA;
-			estiloValido = true;
-		}
-		if (CentralMensagensBrewField.VL.equalsIgnoreCase(dadosComando.getComplementoComando())) {
-			dadosComando.setComplementoComando(null);
-			return msg.toString();
-		}
+
 		if (estiloValido) {
-			msg.append(processarPedido(valor, estiloEscolhido, dadosComando));
-		}else {
-			msg.append(CentralMensagensBrewField.ITEM_NAO_CADASTRADO);
-			msg.append(CentralMensagensBrewField.PULAR_LINHA);
-			msg.append(CentralMensagensBrewField.PULAR_LINHA);
+			msg.append(processarPedido(valor, estiloEscolhido, clienteTelegram));
+		} else {
+			return null;
 		}
+
 		return msg.toString();
 	}
 
-	private String processarPedido(double valor, String estiloEscolhido, InteracaoComando dadosComando) {
+	private String processarPedido(double valor, String estiloEscolhido, ClienteDTO cliente) {
 		StringBuilder msg = new StringBuilder();
 		DateFormat dataPadrao = DateFormat.getDateInstance(DateFormat.DEFAULT);
 		DateFormat horaPadrao = DateFormat.getTimeInstance(DateFormat.DEFAULT);
-
-		InteracaoComando usuarioExistente = EscopoApplictCSCTimerTelegram.mapaClienteComando
-				.get(dadosComando.getIdUsuario());
-		if (dadosComando.getCliente().getPedido() == null) {
-			PedidoDTO pedido = new PedidoDTO(dadosComando.getCliente().getCpfCliente());
-			usuarioExistente.getCliente().setPedido(pedido);
-			ItemPedidoDTO itemDTo = new ItemPedidoDTO(estiloEscolhido, valor);
-			usuarioExistente.getCliente().getPedido().getListaItens().add(itemDTo);
-		} else {
-			ItemPedidoDTO itemDTo = new ItemPedidoDTO(estiloEscolhido, valor);
-			usuarioExistente.getCliente().getPedido().getListaItens().add(itemDTo);
-
-		}
-		usuarioExistente.getCliente().getPedido()
-				.setValorTotalPedido(usuarioExistente.getCliente().getPedido().getValorTotalPedido() + valor);
-		msg.append(CentralMensagensBrewField.ITEM_ADICIONADO_AO_CARRINHO + " ");
+		PostgreSQLJDBCPedidoDML ped = new PostgreSQLJDBCPedidoDML();
+		ItemPedidoDTO item = new ItemPedidoDTO(estiloEscolhido, valor, cliente.getTelefone());
+		double totalParcial = 0.0;
 		msg.append(dataPadrao.format(new Date()) + " ");
 		msg.append(horaPadrao.format(new Date()) + " ");
-		msg.append(estiloEscolhido + valor);
 		msg.append(CentralMensagensBrewField.PULAR_LINHA);
-		msg.append(CentralMensagensBrewField.TOTAL_PARCIAL_DO_CARRINHO
-				+ usuarioExistente.getCliente().getPedido().getValorTotalPedido());
+		if (cliente.getPedido() == null && valor > 0) {
+			totalParcial = valor;
+			PedidoDTO pedido = new PedidoDTO(cliente.getTelefone(), 0.0, CentralMensagensBrewField.ABERTO);
+			ped.cadastrarPedidoDTO(pedido);
+
+			pedido = ped.selecionarPedidoAbertoByTelefone(cliente.getTelefone());
+			ped.cadastrarItemPedidoDTO(item, pedido);
+			pedido.setListaItens(ped.selecionarItemPedidoAbertoByTelefone(pedido));
+
+			cliente.setPedido(pedido);
+			msg.append(CentralMensagensBrewField.ITEM_ADICIONADO_AO_CARRINHO + " ");
+		} else {
+			if (valor > 0) {// ADD
+				ped.cadastrarItemPedidoDTO(item, cliente.getPedido());
+				cliente.getPedido().setListaItens(ped.selecionarItemPedidoAbertoByTelefone(cliente.getPedido()));
+				for (ItemPedidoDTO itemPedidoDTO : cliente.getPedido().getListaItens()) {
+					if (!CentralMensagensBrewField.MSG_TAXA.equalsIgnoreCase(itemPedidoDTO.getEstiloCerveja()))
+						totalParcial += itemPedidoDTO.getValorCerveja();
+				}
+				msg.append(CentralMensagensBrewField.ITEM_ADICIONADO_AO_CARRINHO + " ");
+			} else {// SUB
+				ped.removerItemPedidoDTO(item, cliente.getPedido());
+				cliente.getPedido().setListaItens(ped.selecionarItemPedidoAbertoByTelefone(cliente.getPedido()));
+				msg.append(CentralMensagensBrewField.ITENS_DO_CARRINHO);
+				for (ItemPedidoDTO itemPedidoDTO : cliente.getPedido().getListaItens()) {
+					if (!CentralMensagensBrewField.MSG_TAXA.equalsIgnoreCase(itemPedidoDTO.getEstiloCerveja())) {
+						totalParcial += itemPedidoDTO.getValorCerveja();
+						msg.append(itemPedidoDTO.getEstiloCerveja() + "- " + itemPedidoDTO.getValorCerveja());
+						msg.append(CentralMensagensBrewField.PULAR_LINHA);
+					}
+				}
+				msg.append(CentralMensagensBrewField.ITEM_REMOVIDO_CARRINHO + " ");
+
+			}
+		}
+		msg.append(estiloEscolhido + CentralMensagensBrewField.REAL + valor);
+		msg.append(CentralMensagensBrewField.PULAR_LINHA);
+		msg.append(CentralMensagensBrewField.TOTAL_PARCIAL_DO_CARRINHO + totalParcial);
 		msg.append(CentralMensagensBrewField.PULAR_LINHA);
 		msg.append(CentralMensagensBrewField.PULAR_LINHA);
 		return msg.toString();
