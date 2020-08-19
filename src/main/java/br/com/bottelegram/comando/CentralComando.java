@@ -61,9 +61,9 @@ public abstract class CentralComando {
 		return msg.toString();
 	}
 
-	protected void iniciarTextoEstilos(ClienteDTO clienteTelegram) {
+	protected void iniciarTextoEstilos(ClienteDTO clienteTelegram, String tpBotao) {
 		MenuGrafico menu = new MenuGrafico();
-		menu.botoesEstilosCervejasLinhasDin(clienteTelegram.getIdUsuarioTelegram());
+		menu.botoesEstilosCervejasLinhasDin(clienteTelegram.getIdUsuarioTelegram(), tpBotao);
 	}
 
 	protected String iniciarTexto(String nomeUsuario) {
@@ -79,7 +79,6 @@ public abstract class CentralComando {
 		menu.zerarBotoesBaixo(clienteTelegram.getIdUsuarioTelegram());
 		menu.menuOpcoesGrafico(clienteTelegram.getIdUsuarioTelegram());
 	}
- 
 
 	protected String apresentarMenuFecharPedido(String nomeUsuario) {
 		return iniciarTexto(nomeUsuario, CentralMensagensBrewField.vetOpcoesCompleto, false, true);

@@ -3,9 +3,9 @@ package bancodedados.dto;
 public abstract class CentralMensagensBrewField {
 	private CentralMensagensBrewField() {
 	}
+
 	public static final String ESCOLHA_SEU_GROWLER = "Escolha seu Growler";
 	public static final String ESCOLHA_PAGAMENTO_MENU_ABAIXO = "Escolha sua forma de pagamento entre as opções no menu abaixo.";
-	public static final String COMECE_A_COMPRAR = 	"Adicione itens para que eu posa lhe mostrar o carrinho. :).";
 	public static final String FALTOU_ESCOLHER_PAGAMENTO = "Opa, faltou escolher sua forma de pagamento!";
 	public static final String ADD = "ADD";
 	public static final String REM = "SUB";
@@ -14,7 +14,6 @@ public abstract class CentralMensagensBrewField {
 	public static final long CPF_PADRAO = 11111111111l;
 	public static final long ID_BREW_FIELD = 1l;
 	public static final String DESCRICAO_CERVEJAS_BOTAO = "Nossas cervejas na WEB.";
-//	public static final String DESCRICAO_CERVEJAS_MSG = DESCRICAO_CERVEJAS_BOTAO;
 	public static final String MENU_PRINCIPAL = "Menu Principal";
 	public static final String LINK_DESCRICAO_CERVEJAS = "https://www.goomer.app/brew-field-microcervejaria/menu";
 	public static final String MEU_CELULAR = "Meu Celular";
@@ -41,7 +40,7 @@ public abstract class CentralMensagensBrewField {
 	public static final String MSG_TAXA = "Taxa R$ ";
 	public static final int NUMERO_MINIMO_GROWLER = 2;
 	public static final String MSG_NUMERO_MINIMO_GROWLER = "\n\nOs pedidos tem um limite minimo de "
-			+ NUMERO_MINIMO_GROWLER + " Growlers.\n";
+			+ NUMERO_MINIMO_GROWLER + " Growlers. Escolha a opção <b>Selecionar Growler.</b>\n";
 	public static final String DADOS_TRANSF_BANCARIA = "Banco Inter SA - 077  Agência. 0001  C/C 1415691-1\nBrew Field Microcervejaria";
 	public static final String DADOS_ENVIADO_A_CERVEJARIA_BREW_FIELD = "\nDados enviado a Cervejaria Brew Field. \n";
 	public static final String ESPACO = " ";
@@ -50,6 +49,7 @@ public abstract class CentralMensagensBrewField {
 	public static final String RECIBO_INVALIDO_CONTACTAR_BREW_FIELD = "Recibo inválido. Contactar Brew Field.";
 	public static final String SUPORTE = "Acionar suporte. 041 9 92619070";
 	public static final String URL_RECIBO = "Imagem do comprovante de pagamento: ";
+
 	public static final String BREW_FIELD_PNG = "brewField.png";
 	public static final String CLARA_COPO_GROWLER = "Clara-copo-growler.jpg";
 	public static final String ESCURA_COPO_GROWLER = "Escura-copo-growler.jpg";
@@ -75,7 +75,7 @@ public abstract class CentralMensagensBrewField {
 	public static final double TAXA_ENTREGA_MENOR_100 = 10.0;
 	public static final String MSG_TAXA_ENTREGA = "\nTaxa de entrega de 10,00 para pedidos menores de R$ "
 			+ LIMIAR_TAXA_ENTREGA;
- 	public static final String TOKEN_TELEGRAM_FACULDADE = "1015053732:AAHWzTrMTCCSEmjoFELpVT8XYcbOQH6dvB4";
+	public static final String TOKEN_TELEGRAM_FACULDADE = "1015053732:AAHWzTrMTCCSEmjoFELpVT8XYcbOQH6dvB4";
 	public static final String TOKEN_TELEGRAM_TK4TELECOMBOT = "1149945394:AAG9ioUI_902oqfXMrDZf27C4uvsjaTYL3U";
 
 	public static final String SITE_CEP = "http://cep.republicavirtual.com.br/web_cep.php?cep=%s&formato=xml";
@@ -128,6 +128,7 @@ public abstract class CentralMensagensBrewField {
 
 	public static final int ID_ADICIONAR_PEDIDO = 2;
 	public static final String ADICIONAR_PEDIDO = "Selecionar Growler";
+	public static final String COMECE_A_COMPRAR = "Ops! Carrinho vazio. Clicar em " + ADICIONAR_PEDIDO;
 
 	public static final int ID_VER_CARRINHO = 3;
 	public static final String VER_CARRINHO = "Carrinho";
@@ -135,26 +136,18 @@ public abstract class CentralMensagensBrewField {
 	public static final int ID_SELECIONAR_PAGAMENTO = 5;
 	public static final String SELECIONAR_PAGAMENTO = "Pagamento";
 
-//	public static final int ID_CANCELAR_PEDIDO = 76;
-//	public static final String CANCELAR_PEDIDO =  "Cancelar";
-
 	public static final int ID_CONFIRMAR_PEDIDO = 7;
 	public static final String CONFIRMAR_PEDIDO = "Confirmar";
- 
 
-//	public static final String TB = "TB";
 	public static final String TRANSF_BANCARIA = "Transferência bancária";
-//	public static final String PI = "PI";
-	public static final String PICPAY = "Picpay";
-//	public static final String CD = "CD";
+	public static final String PICPAY = "Picpay (@douglas.mendes4x4)";
 	public static final String CARTAO_DEBITO = "Cartão Débito";
-//	public static final String CC = "CC";
+	public static final String LINK_ASAAS_CARTAO_CREDITO = "Use este link para pagar.\nhttps://www.asaas.com/c/133428192464";
 	public static final String CARTAO_CREDITO = "Cartão Crédito";
-
 
 	public static final String ESCOLHA_UM_DOS_ESTILOS_DISPONIVEIS = "Escolha um entre os %s estilos disponíveis.\nGrowlers Pet descartáveis  de 1 Litro.\n\n";
 	public static final String ITEM_ADICIONADO_AO_CARRINHO = "Estilo adicionado: ";
-	public static final String ITEM_REMOVIDO_CARRINHO = "Estilo removido: ";
+	public static final String ITEM_NAO_ADD = "\n<b>Estilo não consta no carrinho.</b>\n";
 	public static final String ITENS_DO_CARRINHO = "Itens Carrinho: \n";
 	public static final String QUANTIDADE_ESCOLHIDA = "Quantidade escolhida: ";
 
@@ -169,29 +162,19 @@ public abstract class CentralMensagensBrewField {
 	public static final String APA = AP + ESPACO_TRACO + BREAK_DOWN_APA + VALOR_APA + PULAR_LINHA;
 
 	public static final String IP = "IP";
-//	public static final double VALOR_IPA = 18.0;
-//	public static final String BREAK_DOWN_IPA = "Break Down IPA";
 	public static final String REAL = "-R$ ";
-//	public static final String IPA = IP + ESPACO_TRACO + BREAK_DOWN_IPA + VALOR_IPA + PULAR_LINHA;
 
 	public static final String PT = "PT";
-//	public static final double VALOR_PORTER = 18.0;
-//	public static final String BLACK_SAILS = "Porter Black Sails. R$ ";
-//	public static final String PORTER = PT + ESPACO_TRACO + BLACK_SAILS + VALOR_PORTER + PULAR_LINHA;
-
 	public static final String RD = "RD";
-//	public static final double VALOR_RED = 17.0;
-//	public static final String RED_ALE = "IRA Red ALE. R$ ";
-//	public static final String RED = RD + ESPACO_TRACO + RED_ALE + VALOR_RED + PULAR_LINHA;
 	public static final String INFORMAR_CLIENTE_ENDERECO_CADASTRADO = "Observei que já comprou conosco. Escolha sua opção no <b>Menu Principal</b>.";
 	public static final String INFORMADO_TELEFONE = "Observei que já informou seu telefone. Só falta seu endereço. "
 			+ EXEMPLO_CEP;
 
 	public static final String[] vetSomenteLogin = { EXEMPLO_CEP };
-	public static final String[] vetOpcoesParcial = { FUNCOES,  ADICIONAR_PEDIDO };
+	public static final String[] vetOpcoesParcial = { FUNCOES, ADICIONAR_PEDIDO };
 	public static final String[] vetOpcoesCompleto = { ADICIONAR_PEDIDO, VER_CARRINHO, SELECIONAR_PAGAMENTO };
- 
 
 	public static final int[] vetMenuPrincipalOpcoesValidas = { ID_ADICIONAR_PEDIDO, ID_VER_CARRINHO,
-			ID_SELECIONAR_PAGAMENTO,   ID_CONFIRMAR_PEDIDO, ID_ALTERAR_DADOS };
+			ID_SELECIONAR_PAGAMENTO, ID_CONFIRMAR_PEDIDO, ID_ALTERAR_DADOS };
+
 }

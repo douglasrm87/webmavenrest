@@ -7,15 +7,13 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.log4j.Logger;
-
 import br.com.bottelegram.comando.dto.GestaoAtendimento;
 
 //http://localhost:8080/bottelegram/gestaocsc.jsf
 @SessionScoped
 @ManagedBean(name = "gestao")
 public class GestaoAtendimentoCSC {
-	private static final Logger logger = Logger.getLogger(GestaoAtendimentoCSC.class);
+//	private static final Logger logger = Logger.getLogger(GestaoAtendimentoCSC.class);
 	private List<GestaoAtendimento> listaGestaoJSF = new ArrayList<>();
 
 	public List<GestaoAtendimento> getListaGestaoJSF() {

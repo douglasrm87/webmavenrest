@@ -9,6 +9,7 @@ import bancodedados.dto.ClienteDTO;
 
 public class InteracaoComando {
 	private int idComando;
+	private int idComandoPai;
 	private String complementoComando;
 	private String nome;
 	private long idUsuarioTelegram;
@@ -118,6 +119,14 @@ public class InteracaoComando {
 				+ this.nome + ", idUsuarioTelegram=" + this.idUsuarioTelegram + ", sobreNome=" + this.sobreNome + ", enviadoFoto="
 				+ this.enviadoFoto + ", urlRecibo=" + this.urlRecibo + ", meuContato=" + this.meuContato + ", fotoPagamento="
 				+ Arrays.toString(this.fotoPagamento) + "]";
+	}
+
+	public int getIdComandoPai() {
+		return this.idComandoPai;
+	}
+
+	public void setIdComandoPai(int idComandoPai) {
+		this.idComandoPai = idComandoPai;
 	}
  
 

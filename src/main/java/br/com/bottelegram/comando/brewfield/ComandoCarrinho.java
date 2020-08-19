@@ -1,52 +1,79 @@
 package br.com.bottelegram.comando.brewfield;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
+import bancodedados.PostgreSQLJDBCPedidoDML;
 import bancodedados.dto.CentralMensagensBrewField;
 import bancodedados.dto.ClienteDTO;
 import bancodedados.dto.ItemPedidoDTO;
+import bancodedados.dto.MenuGrafico;
+import bancodedados.dto.ProdutoBebida;
 import br.com.bottelegram.comando.CentralComando;
 import br.com.bottelegram.comando.dto.InteracaoComando;
 
 public class ComandoCarrinho extends CentralComando {
 
-	protected String apresentarCarrinhoResumido(ClienteDTO dadosComando) {
-		StringBuilder msg = new StringBuilder();
-		ComandoFecharPedido fecharPed = new ComandoFecharPedido();
-		List<ItemPedidoDTO> listaitens = fecharPed.processarFecharPedido(dadosComando);
-		if (listaitens != null) {
-			double totalCompra = 0.0;
-			msg.append(CentralMensagensBrewField.ITENS_DO_CARRINHO);
-			msg.append(CentralMensagensBrewField.QUANTIDADE_ESCOLHIDA + listaitens.size());
-			msg.append(CentralMensagensBrewField.PULAR_LINHA);
+//	protected String apresentarCarrinhoResumido(ClienteDTO dadosComando) {
+//		StringBuilder msg = new StringBuilder();
+//		ComandoFecharPedido fecharPed = new ComandoFecharPedido();
+//		List<ItemPedidoDTO> listaitens = fecharPed.processarFecharPedido(dadosComando);
+//		if (listaitens != null) {
+//			double totalCompra = 0.0;
+//			msg.append(CentralMensagensBrewField.ITENS_DO_CARRINHO);
+//			msg.append(CentralMensagensBrewField.QUANTIDADE_ESCOLHIDA + listaitens.size());
+//			msg.append(CentralMensagensBrewField.PULAR_LINHA);
+//
+//			for (ItemPedidoDTO itemPedidoDTO : listaitens) {
+//				msg.append(itemPedidoDTO.getEstiloCerveja() + " - R$ " + itemPedidoDTO.getValorCerveja() + "\n");
+//				totalCompra += itemPedidoDTO.getValorCerveja();
+//			}
+//			msg.append(CentralMensagensBrewField.TOTAL_DE_PEDIDOS + totalCompra);
+//		}
+//		return msg.toString();
+//	}
 
-			for (ItemPedidoDTO itemPedidoDTO : listaitens) {
-				msg.append(itemPedidoDTO.getEstiloCerveja() + " - R$ " + itemPedidoDTO.getValorCerveja() + "\n");
-				totalCompra += itemPedidoDTO.getValorCerveja();
-			}
-			msg.append(CentralMensagensBrewField.TOTAL_DE_PEDIDOS + totalCompra);
-		}
-		return msg.toString();
-	}
-
-	protected String apresentarCarrinho(ClienteDTO clienteTelegram) {
+	protected String apresentarCarrinho(InteracaoComando dadosComando, ClienteDTO clienteTelegram) {
 		StringBuilder msg = new StringBuilder();
-		ComandoFecharPedido fecharPed = new ComandoFecharPedido();
+		MenuGrafico menu = new MenuGrafico();
 		msg.append(calcularTaxa(clienteTelegram));
-		List<ItemPedidoDTO> listaitens = fecharPed.processarFecharPedido(clienteTelegram);
-		if (listaitens != null) {
+
+		if (clienteTelegram.getPedido() != null && clienteTelegram.getPedido().getListaItens() != null) {
+			String meuPedido[] = dadosComando.getComplementoComando().split("-");
+			if (meuPedido != null && meuPedido.length == 3 && CentralMensagensBrewField.REM.equals(meuPedido[0])) {
+				String estiloRemover = "";
+				for (int i = 0; i < clienteTelegram.getPedido().getListaItens().size(); i++) {
+					if (meuPedido[1]
+							.equalsIgnoreCase(clienteTelegram.getPedido().getListaItens().get(i).getEstiloCerveja())) {
+						estiloRemover = clienteTelegram.getPedido().getListaItens().get(i).getEstiloCerveja();
+						break;
+					}
+				}
+				if (!estiloRemover.isEmpty()) {
+					PostgreSQLJDBCPedidoDML ped = new PostgreSQLJDBCPedidoDML();
+					ItemPedidoDTO item = new ItemPedidoDTO(estiloRemover);
+					ped.removerItemPedidoDTO(item, clienteTelegram.getPedido());
+					clienteTelegram.getPedido()
+							.setListaItens(ped.selecionarItemPedidoAbertoByTelefone(clienteTelegram.getPedido()));
+				} else {
+					msg.append(CentralMensagensBrewField.ITEM_NAO_ADD);
+				}
+			}
+
 			double totalCompra = 0.0;
 			int qdadeitens = 0;
-			for (ItemPedidoDTO itemPedidoDTO : listaitens) {
+			for (ItemPedidoDTO itemPedidoDTO : clienteTelegram.getPedido().getListaItens()) {
 				if (!CentralMensagensBrewField.MSG_TAXA.equalsIgnoreCase(itemPedidoDTO.getEstiloCerveja())) {
 					qdadeitens++;
 				}
 			}
 			msg.append(CentralMensagensBrewField.QUANTIDADE_ESCOLHIDA + qdadeitens);
 			msg.append(CentralMensagensBrewField.PULAR_LINHA);
-
-			for (ItemPedidoDTO itemPedidoDTO : listaitens) {
-				msg.append(itemPedidoDTO.getEstiloCerveja() + " - R$ " + itemPedidoDTO.getValorCerveja() + "\n");
+			DateFormat dataPadrao = DateFormat.getDateInstance(DateFormat.DEFAULT);
+			for (ItemPedidoDTO itemPedidoDTO : clienteTelegram.getPedido().getListaItens()) {
+				msg.append(itemPedidoDTO.getEstiloCerveja() + " - R$ " + itemPedidoDTO.getValorCerveja() + " - "
+						+ dataPadrao.format(itemPedidoDTO.getDataPedido()) + "\n");
 				totalCompra += itemPedidoDTO.getValorCerveja();
 			}
 
@@ -67,8 +94,11 @@ public class ComandoCarrinho extends CentralComando {
 			msg.append(CentralMensagensBrewField.ENDERECO_DE_ENTREGA + clienteTelegram.getEndereco());
 			msg.append(CentralMensagensBrewField.PULAR_LINHA);
 			if (clienteTelegram.getPedido() != null && clienteTelegram.getPedido().getPagamento() != null) {
-				msg.append(CentralMensagensBrewField.PAGAMENTO_ESCOLHIDO + clienteTelegram.getPedido().getPagamento());
+				msg.append(CentralMensagensBrewField.PAGAMENTO_ESCOLHIDO
+						+ clienteTelegram.getPedido().getPagamento().getDescPagamento() + " "
+						+ dataPadrao.format(clienteTelegram.getPedido().getPagamento().getDataPedido()));
 			}
+
 			msg.append(CentralMensagensBrewField.PULAR_LINHA);
 			if (clienteTelegram.getPedido() != null && clienteTelegram.getPedido().getUrlRecibo() != null
 					&& clienteTelegram.getPedido().getUrlRecibo().length() > 0) {
@@ -76,6 +106,7 @@ public class ComandoCarrinho extends CentralComando {
 			}
 		}
 		return msg.toString();
+
 	}
 
 	protected String calcularTaxa(ClienteDTO dadosComando) {

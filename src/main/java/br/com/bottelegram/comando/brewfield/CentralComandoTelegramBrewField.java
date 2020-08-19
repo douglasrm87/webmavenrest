@@ -74,23 +74,25 @@ public class CentralComandoTelegramBrewField extends CentralComando {
 					msg.append(ret);
 					if (ret == null) {
 						// botoe de baixo com os estilos da cerveja.
-						iniciarTextoEstilos(clienteTelegram);
+						iniciarTextoEstilos(clienteTelegram, CentralMensagensBrewField.ADD);
 					}
 				} else {
-					iniciarTextoEstilos(clienteTelegram);
+					iniciarTextoEstilos(clienteTelegram, CentralMensagensBrewField.ADD);
 				}
-
 			}
-
 			break;
 		case CentralMensagensBrewField.ID_VER_CARRINHO:
 			if (clienteTelegram != null && clienteTelegram.getPedido() != null) {
 				ComandoVerCarrinho verCarrinho = new ComandoVerCarrinho();
-				String ret = verCarrinho.apresentarCarrinho(clienteTelegram);
+				String ret = verCarrinho.apresentarCarrinho(dadosComando, clienteTelegram);
 				msg.append(ret);
-				menu.zerarBotoesBaixo(dadosComando.getIdUsuarioTelegram());
+				if (clienteTelegram.getPedido().getListaItens().isEmpty()) {
+					menu.zerarBotoesBaixo(dadosComando.getIdUsuarioTelegram());
+				} else {
+					iniciarTextoEstilos(clienteTelegram, CentralMensagensBrewField.REM);
+				}
 			} else {
-				msg.append(CentralMensagensBrewField.COMECE_A_COMPRAR);
+				msg.append(saidaPadrao(clienteTelegram));
 			}
 			break;
 
@@ -98,23 +100,22 @@ public class CentralComandoTelegramBrewField extends CentralComando {
 			if (clienteTelegram != null && clienteTelegram.getPedido() != null) {
 				ComandoSelecionarPagamento selPagamento = new ComandoSelecionarPagamento();
 				msg.append(selPagamento.processarSelecionarPagamento(dadosComando, clienteTelegram));
-			} else {
-				msg.append(CentralMensagensBrewField.COMECE_A_COMPRAR);
+				
+			}else {
+				msg.append(saidaPadrao(clienteTelegram));
 			}
 
 			break;
- 		case CentralMensagensBrewField.ID_CONFIRMAR_PEDIDO:
+		case CentralMensagensBrewField.ID_CONFIRMAR_PEDIDO:
 			if (clienteTelegram != null && clienteTelegram.getPedido() != null) {
 				if (clienteTelegram.getPedido().getPagamento() != null) {
 					ComandoConfirmarPedido confPedido = new ComandoConfirmarPedido();
-//					msg.append(confPedido.processarConfirmarPedido(dadosComando, clienteTelegram));
 					msg.append(CentralMensagensBrewField.PEDIDO_FINALIZADO);
-					// Aqui precisamos tornar o pedido fechado, dar update no pedido e itens.
-					PostgreSQLJDBCPedidoDML fechar = new PostgreSQLJDBCPedidoDML();
-					fechar.fecharPedidoCliente(clienteTelegram);
 				} else {
 					msg.append(CentralMensagensBrewField.FALTOU_ESCOLHER_PAGAMENTO);
 				}
+			} else {
+				msg.append(saidaPadrao(clienteTelegram));
 			}
 
 			break;
@@ -146,6 +147,15 @@ public class CentralComandoTelegramBrewField extends CentralComando {
 				}
 			}
 			break;
+		}
+		return msg.toString();
+	}
+
+	private String saidaPadrao(ClienteDTO clienteTelegram) {
+		StringBuilder msg = new StringBuilder();
+		msg.append(CentralMensagensBrewField.COMECE_A_COMPRAR);
+		if (clienteTelegram != null && clienteTelegram.getEndereco() != null) {
+			menuJaLogadoContinuar(clienteTelegram);
 		}
 		return msg.toString();
 	}

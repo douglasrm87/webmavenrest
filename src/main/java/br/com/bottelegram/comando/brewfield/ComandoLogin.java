@@ -1,17 +1,11 @@
 package br.com.bottelegram.comando.brewfield;
 
-import org.apache.log4j.Logger;
-
 import bancodedados.dto.CentralMensagensBrewField;
 import bancodedados.dto.ClienteDTO;
-import bancodedados.dto.EnderecoDTO;
-import bancodedados.dto.EnderecoXML;
-import bancodedados.dto.LoginDTO;
-import br.com.bottelegram.comando.dto.InteracaoComando;
 
 public class ComandoLogin {
 
-	private static final Logger logger = Logger.getLogger(ComandoLogin.class);
+//	private static final Logger logger = Logger.getLogger(ComandoLogin.class);
 
 //	public String processarLogin() {
 //		StringBuilder msg = new StringBuilder();

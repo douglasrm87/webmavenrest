@@ -1,7 +1,5 @@
 package br.com.bottelegram.comando.brewfield;
 
-import org.apache.log4j.Logger;
-
 import bancodedados.PostgreSQLJDBCPagamentoDML;
 import bancodedados.PostgreSQLJDBCPedidoDML;
 import bancodedados.dto.CentralMensagensBrewField;
@@ -13,7 +11,7 @@ import br.com.bottelegram.comando.dto.InteracaoComando;
 
 public class ComandoPagamento {
 
-	private static final Logger logger = Logger.getLogger(ComandoPagamento.class);
+//	private static final Logger logger = Logger.getLogger(ComandoPagamento.class);
 
 	public String processarPagamento(InteracaoComando dadosComando, ClienteDTO clienteTelegram) {
 		StringBuilder msg = new StringBuilder();
@@ -39,15 +37,18 @@ public class ComandoPagamento {
 			pagamento = new FormasPagamento(clienteTelegram.getTelefone(), CentralMensagensBrewField.ID_CARTAO_CREDITO,
 					CentralMensagensBrewField.CARTAO_CREDITO);
 			msg.append(CentralMensagensBrewField.PAGAMENTO_ESCOLHIDO + CentralMensagensBrewField.CARTAO_CREDITO);
+			msg.append(CentralMensagensBrewField.PULAR_LINHA);
+			msg.append(CentralMensagensBrewField.LINK_ASAAS_CARTAO_CREDITO);
 		}
+		msg.append(CentralMensagensBrewField.PULAR_LINHA);
 		if (pagamento != null) {
 			PostgreSQLJDBCPedidoDML ped = new PostgreSQLJDBCPedidoDML();
 			PedidoDTO pedido = ped.selecionarPedidoAbertoByTelefone(clienteTelegram.getTelefone());
 			PostgreSQLJDBCPagamentoDML pag = new PostgreSQLJDBCPagamentoDML();
 			pag.cadastrarPagamentoPedidoDTO(pagamento, pedido);
 			MenuGrafico menu = new MenuGrafico();
-			menu.zerarBotoesBaixo(dadosComando.getIdUsuarioTelegram());
-			msg.append(CentralMensagensBrewField.AGORA_SO_FALTA_CONFIRMAR_SEU_PEDIDO);
+//			menu.zerarBotoesBaixo(dadosComando.getIdUsuarioTelegram());
+//			msg.append(CentralMensagensBrewField.AGORA_SO_FALTA_CONFIRMAR_SEU_PEDIDO);
 		}
 
 		return msg.toString();

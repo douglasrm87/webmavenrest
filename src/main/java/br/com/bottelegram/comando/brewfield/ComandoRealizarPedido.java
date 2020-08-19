@@ -4,8 +4,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import bancodedados.PostgreSQLJDBCPedidoDML;
 import bancodedados.dto.CentralMensagensBrewField;
 import bancodedados.dto.ClienteDTO;
@@ -17,7 +15,7 @@ import br.com.bottelegram.comando.dto.InteracaoComando;
 
 public class ComandoRealizarPedido {
 
-	private static final Logger logger = Logger.getLogger(ComandoRealizarPedido.class);
+//	private static final Logger logger = Logger.getLogger(ComandoRealizarPedido.class);
 
 	public String processarPedido() {
 		StringBuilder msg = new StringBuilder();
@@ -33,21 +31,13 @@ public class ComandoRealizarPedido {
 		String estiloEscolhido = new String();
 		boolean estiloValido = false;
 		String meuPedido[] = dadosComando.getComplementoComando().split("-");
-		if (meuPedido != null && meuPedido.length == 3) {
+		if (meuPedido != null && meuPedido.length == 3 && CentralMensagensBrewField.ADD.equals(meuPedido[0])) {
 			for (ProdutoBebida produto : listaCervejas) {
 				if (meuPedido[1].equalsIgnoreCase(produto.getDescricaoCurta())) {
-					if (CentralMensagensBrewField.ADD.equals(meuPedido[0])) {
-						valor = produto.getValorLitro();
-						estiloEscolhido = produto.getDescricaoCurta();
-						estiloValido = true;
-						break;
-					}
-					if (CentralMensagensBrewField.REM.equals(meuPedido[0])) {
-						valor = produto.getValorLitro() * -1;
-						estiloEscolhido = produto.getDescricaoCurta();
-						estiloValido = true;
-						break;
-					}
+					valor = produto.getValorLitro();
+					estiloEscolhido = produto.getDescricaoCurta();
+					estiloValido = true;
+					break;
 				}
 			}
 		}
@@ -83,28 +73,13 @@ public class ComandoRealizarPedido {
 			cliente.setPedido(pedido);
 			msg.append(CentralMensagensBrewField.ITEM_ADICIONADO_AO_CARRINHO + " ");
 		} else {
-			if (valor > 0) {// ADD
-				ped.cadastrarItemPedidoDTO(item, cliente.getPedido());
-				cliente.getPedido().setListaItens(ped.selecionarItemPedidoAbertoByTelefone(cliente.getPedido()));
-				for (ItemPedidoDTO itemPedidoDTO : cliente.getPedido().getListaItens()) {
-					if (!CentralMensagensBrewField.MSG_TAXA.equalsIgnoreCase(itemPedidoDTO.getEstiloCerveja()))
-						totalParcial += itemPedidoDTO.getValorCerveja();
-				}
-				msg.append(CentralMensagensBrewField.ITEM_ADICIONADO_AO_CARRINHO + " ");
-			} else {// SUB
-				ped.removerItemPedidoDTO(item, cliente.getPedido());
-				cliente.getPedido().setListaItens(ped.selecionarItemPedidoAbertoByTelefone(cliente.getPedido()));
-				msg.append(CentralMensagensBrewField.ITENS_DO_CARRINHO);
-				for (ItemPedidoDTO itemPedidoDTO : cliente.getPedido().getListaItens()) {
-					if (!CentralMensagensBrewField.MSG_TAXA.equalsIgnoreCase(itemPedidoDTO.getEstiloCerveja())) {
-						totalParcial += itemPedidoDTO.getValorCerveja();
-						msg.append(itemPedidoDTO.getEstiloCerveja() + "- " + itemPedidoDTO.getValorCerveja());
-						msg.append(CentralMensagensBrewField.PULAR_LINHA);
-					}
-				}
-				msg.append(CentralMensagensBrewField.ITEM_REMOVIDO_CARRINHO + " ");
-
+			ped.cadastrarItemPedidoDTO(item, cliente.getPedido());
+			cliente.getPedido().setListaItens(ped.selecionarItemPedidoAbertoByTelefone(cliente.getPedido()));
+			for (ItemPedidoDTO itemPedidoDTO : cliente.getPedido().getListaItens()) {
+				if (!CentralMensagensBrewField.MSG_TAXA.equalsIgnoreCase(itemPedidoDTO.getEstiloCerveja()))
+					totalParcial += itemPedidoDTO.getValorCerveja();
 			}
+			msg.append(CentralMensagensBrewField.ITEM_ADICIONADO_AO_CARRINHO + " ");
 		}
 		msg.append(estiloEscolhido + CentralMensagensBrewField.REAL + valor);
 		msg.append(CentralMensagensBrewField.PULAR_LINHA);

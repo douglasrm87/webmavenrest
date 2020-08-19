@@ -1,14 +1,12 @@
 package br.com.bottelegram.comando.brewfield;
 
-import org.apache.log4j.Logger;
-
 import bancodedados.dto.CentralMensagensBrewField;
 import bancodedados.dto.ClienteDTO;
 import br.com.bottelegram.comando.dto.InteracaoComando;
 
 public class ComandoSelecionarPagamento extends ComandoCarrinho {
 
-	private static final Logger logger = Logger.getLogger(ComandoSelecionarPagamento.class);
+//	private static final Logger logger = Logger.getLogger(ComandoSelecionarPagamento.class);
 
 	public String processarSelecionarPagamento(InteracaoComando dadosComando, ClienteDTO clienteTelegram) {
 		StringBuilder msg = new StringBuilder();
@@ -24,7 +22,10 @@ public class ComandoSelecionarPagamento extends ComandoCarrinho {
 			msg.append(pagamento.processarPagamento(dadosComando, clienteTelegram));
 			if (clienteTelegram.getPedido() != null && clienteTelegram.getPedido().getPagamento() != null
 					&& clienteTelegram.getPedido().getPagamento()
-							.getIdPagamento() != CentralMensagensBrewField.VALOR_INICIAL_FORMA_PAG) {
+							.getIdPagamento() != CentralMensagensBrewField.VALOR_INICIAL_FORMA_PAG
+
+					&& !dadosComando.getComplementoComando()
+							.equals(String.valueOf(CentralMensagensBrewField.ID_SELECIONAR_PAGAMENTO))) {
 				msg.append(calcularTaxa(clienteTelegram));
 				msg.append(CentralMensagensBrewField.MSG_FECHAMENTO);
 				msg.append(CentralMensagensBrewField.AGORA_SO_FALTA_CONFIRMAR_SEU_PEDIDO);
@@ -32,13 +33,16 @@ public class ComandoSelecionarPagamento extends ComandoCarrinho {
 						.getIdPagamento() == CentralMensagensBrewField.ID_TRANSFERENCIA_BANCARIA) {
 					msg.append(CentralMensagensBrewField.ENVIAR_SEU_COMPROVANTE_PARA_MIM);
 				}
-
+				menuJaLogadoContinuar(clienteTelegram);
+				dadosComando.setIdComando(0);
 				return msg.toString();
 			}
 
 			dadosComando.setComplementoComando(null);
 		} else {
 			msg.append(CentralMensagensBrewField.MSG_NUMERO_MINIMO_GROWLER);
+			menuJaLogadoContinuar(clienteTelegram);
+			dadosComando.setIdComando(0);
 		}
 
 		return msg.toString();

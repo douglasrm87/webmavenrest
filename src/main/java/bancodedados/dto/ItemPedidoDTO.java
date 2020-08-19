@@ -12,6 +12,9 @@ public class ItemPedidoDTO extends PedidoDTO {
 		this.valorCerveja = valorCerveja;
 		
 	}
+	public ItemPedidoDTO(String estiloCerveja) {
+		this.estiloCerveja = estiloCerveja;
+	}
 
 	public ItemPedidoDTO() {
 	}

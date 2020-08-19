@@ -107,6 +107,7 @@ public class FluxoTelegram {
 				if (dadosEntrada == null) {
 					this.botTelegram.execute(new SendMessage(update.message().chat().id(), ""));
 					updatesResponse.updates().clear();
+					this.offSetAtributo = update.updateId() + 1;
 					return;
 				}
 				System.out.println(CentralMensagensBrewField.DIVISAO_TRACO_INICIO);
@@ -119,11 +120,6 @@ public class FluxoTelegram {
 				System.out.println("Escrevendo ..." + baseResponse.isOk());
 				// verificação de ação de chat foi enviada com sucesso
 				System.out.println("Resposta de Chat Action Enviada?" + baseResponse.isOk());
-
-//				MenuGrafico menu = new MenuGrafico();
-//				menuNrTelefone(dadosEntrada.getIdUsuarioTelegram() , "Douglas");
-//				menu.botoesFormasPAgamento(dadosEntrada.getIdUsuarioTelegram());
-//				menu.zerarBotoesBaixo(dadosEntrada.getIdUsuarioTelegram());
 
 				// envio da mensagem de resposta
 				String msgRetornadaCliente = "";
@@ -138,26 +134,25 @@ public class FluxoTelegram {
 						if (msgRetornadaCliente != null && clienteTelegram.getPedido() != null
 								&& dadosEntrada.getIdComando() == CentralMensagensBrewField.ID_VER_CARRINHO) {
 							// primeira vez do usuario no bot paso por aqui
-							sendResponse = this.botTelegram.execute(new SendPhoto(dadosEntrada.getIdUsuarioTelegram(),
-									new java.io.File(CentralMensagensBrewField.FORTE_COPO_GROWLER)));
-							System.out.println(
-									"Foto Enviada:" + sendResponse.isOk() + "Conteudo: " + msgRetornadaCliente);
+
+							try {
+								sendResponse = this.botTelegram
+										.execute(new SendPhoto(dadosEntrada.getIdUsuarioTelegram(),
+												new java.io.File(EscopoApplictCSCTimerTelegram.obterPathWEB()
+														+ CentralMensagensBrewField.FORTE_COPO_GROWLER)));
+								System.out.println(
+										"Foto Enviada:" + sendResponse.isOk() + "Conteudo: " + msgRetornadaCliente);
+							} catch (Exception e) {
+								System.out.println("Imagem carrinho n�o encontrada");
+							}
 						}
 						if (dadosEntrada.getIdComando() == CentralMensagensBrewField.ID_CONFIRMAR_PEDIDO
 								&& clienteTelegram.getPedido() != null
 								&& clienteTelegram.getPedido().getPagamento() != null) {
-							if (clienteTelegram.getPedido().getPagamento()
-									.getIdPagamento() == CentralMensagensBrewField.ID_TRANSFERENCIA_BANCARIA
-									&& dadosEntrada.isEnviadoFoto()) {
-								// enviar dados para celular telegram do jeann
-								enviarPedidoCervejariaBrewField(clienteTelegram, dadosEntrada.getUrlRecibo());
-							} else {
-								enviarPedidoCervejariaBrewField(clienteTelegram, null);
-								this.botTelegram.execute(new SendPhoto(dadosEntrada.getIdUsuarioTelegram(),
-										new java.io.File(CentralMensagensBrewField.JOIA)));
-
-							}
-
+							enviarPedidoCervejariaBrewField(dadosEntrada.getIdUsuarioTelegram());
+							this.botTelegram.execute(new SendPhoto(dadosEntrada.getIdUsuarioTelegram(),
+									new java.io.File(EscopoApplictCSCTimerTelegram.obterPathWEB()
+											+ CentralMensagensBrewField.JOIA)));
 						}
 					} else {
 						dadosEntrada.setIdComando(CentralMensagensBrewField.ID_LOGIN);
@@ -176,6 +171,9 @@ public class FluxoTelegram {
 								.parseMode(ParseMode.HTML));
 				// verificação de mensagem enviada com sucesso
 				System.out.println("Mensagem Enviada:" + sendResponse.isOk() + "Contteudo: " + msgRetornadaCliente);
+
+//				MenuGrafico menu = new MenuGrafico();
+//				menu.sendInvoice(dadosEntrada.getIdUsuarioTelegram());
 			}
 		}
 	}
@@ -188,8 +186,13 @@ public class FluxoTelegram {
 
 	public static int LIMITE_BRINDE = 10;
 
-	private void enviarPedidoCervejariaBrewField(ClienteDTO cliente, String urlRecibo) {
+	private void enviarPedidoCervejariaBrewField(long idUsuarioTelegram) {
 		StringBuilder msg = new StringBuilder();
+		ClienteDTO cliente = carregarClienteExistente(idUsuarioTelegram);
+		// Aqui precisamos tornar o pedido fechado, dar update no pedido e itens.
+		PostgreSQLJDBCPedidoDML fechar = new PostgreSQLJDBCPedidoDML();
+		fechar.fecharPedidoCliente(cliente);
+
 		try {
 			DateFormat dataPadrao = DateFormat.getDateInstance(DateFormat.DEFAULT);
 			DateFormat horaPadrao = DateFormat.getTimeInstance(DateFormat.DEFAULT);
@@ -217,11 +220,18 @@ public class FluxoTelegram {
 			msg.append(CentralMensagensBrewField.ESPACO + cliente.getEndereco().getUf());
 			msg.append(CentralMensagensBrewField.ESPACO + cliente.getEndereco().getCep());
 			msg.append(CentralMensagensBrewField.DIVISAO);
-			if (cliente.getPedido() != null) {
+			if (cliente.getPedido() != null && cliente.getPedido().getListaItens() != null) {
 				if (cliente.getPedido().getUrlRecibo() != null) {
 					msg.append(CentralMensagensBrewField.ESPACO + cliente.getPedido().getUrlRecibo());
 				}
-				msg.append(CentralMensagensBrewField.TOTAL_DE_PEDIDOS + +cliente.getPedido().getValorTotalPedido());
+				double totalPedido = 0.0;
+				for (ItemPedidoDTO item : cliente.getPedido().getListaItens()) {
+					totalPedido += item.getValorCerveja();
+				}
+				if (totalPedido < CentralMensagensBrewField.LIMIAR_TAXA_ENTREGA) {
+					totalPedido += CentralMensagensBrewField.TAXA_ENTREGA_MENOR_100;
+				}
+				msg.append(CentralMensagensBrewField.TOTAL_DE_PEDIDOS + totalPedido);
 
 				msg.append(CentralMensagensBrewField.DIVISAO);
 				for (ItemPedidoDTO item : cliente.getPedido().getListaItens()) {
@@ -274,7 +284,7 @@ public class FluxoTelegram {
 		return msg.toString();
 	}
 
-	private InteracaoComando validarComandoRecebido(Update update) {
+	protected InteracaoComando validarComandoRecebido(Update update) {
 		try {
 			String complemento;
 			int opcao = 0;

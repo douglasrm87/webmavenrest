@@ -7,19 +7,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+
 //import org.apache.log4j.Logger;
 import br.com.bottelegram.comando.dto.GestaoAtendimento;
 import br.com.bottelegram.comando.dto.InteracaoComando;
 import br.com.bottelegram.comando.dto.VPNConectadaExcel;
+import br.com.bottelegram.comando.faculdade.FluxoTelegramFaculdade;
 //Exemplos
 //https://www.codota.com/code/java/methods/com.pengrad.telegrambot.response.SendResponse/message
 //https://github.com/pengrad/java-telegram-bot-api/blob/master/README.md
 
 // digitar 2 de uma vez Exception in thread "Timer-0" java.util.ConcurrentModificationException
 //92619070#877554#80050350#777 ap 2777
+//
+
+//heroku ps:scale web=0 --app webmavenheroku
+
 @ApplicationScoped
 @ManagedBean(name = "telegram", eager = true)
 public class EscopoApplictCSCTimerTelegram implements Serializable {
@@ -29,7 +38,9 @@ public class EscopoApplictCSCTimerTelegram implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int delay = 4000; // delay de 4 seg.
 	private int interval = 4000; // intervalo de 4 seg.
-	private FluxoTelegram webTelegram = new FluxoTelegram();
+	
+//	private FluxoTelegram webTelegram = new FluxoTelegram();
+	private FluxoTelegramFaculdade webTelegram = new FluxoTelegramFaculdade();
 
 	public static Map<Long, InteracaoComando> mapaClienteComando = new HashMap<>();
 	public static List<GestaoAtendimento> listaGestao = new ArrayList<>();
@@ -40,11 +51,7 @@ public class EscopoApplictCSCTimerTelegram implements Serializable {
 		System.out.println(ASTERICS);
 		System.out.println(INICIANDO_CSC_BOT_TELEGRAM);
 		System.out.println(ASTERICS);
-//		logger.info(ASTERICS);
-//		logger.info(INICIANDO_CSC_BOT_TELEGRAM);
-//		logger.info(ASTERICS);
 
-		
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
@@ -65,4 +72,22 @@ public class EscopoApplictCSCTimerTelegram implements Serializable {
 		super();
 	}
 
+	private static FacesContext facesContext = FacesContext.getCurrentInstance();
+
+	public static String obterPathWEB() {
+		if (facesContext != null) {
+			ServletContext servletContext = (ServletContext) facesContext.getExternalContext().getContext();
+			String pathRel = servletContext.getRealPath("") + "/imagens/";
+			return pathRel;
+		}
+		return new String();
+	}
+	public static String obterPathWEBFile() {
+		if (facesContext != null) {
+			ServletContext servletContext = (ServletContext) facesContext.getExternalContext().getContext();
+			String pathRel = servletContext.getRealPath("") + "/arquivos/";
+			return pathRel;
+		}
+		return new String();
+	}
 }
