@@ -1,5 +1,6 @@
 package br.com.bottelegram.comando.faculdade;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import com.pengrad.telegrambot.request.SendChatAction;
 import com.pengrad.telegrambot.request.SendDocument;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
+import com.pengrad.telegrambot.request.SetWebhook;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -21,22 +23,47 @@ import br.com.bottelegram.EscopoApplictCSCTimerTelegram;
 import br.com.bottelegram.FluxoTelegram;
 import br.com.bottelegram.comando.dto.InteracaoComando;
 
+//curl -F "url=" 
+// https://api.telegram.org/1015053732:AAHWzTrMTCCSEmjoFELpVT8XYcbOQH6dvB4/setWebhook
+// https://api.telegram.org/1015053732:AAHWzTrMTCCSEmjoFELpVT8XYcbOQH6dvB4/setupdates
+// https://api.telegram.org/1015053732:AAHWzTrMTCCSEmjoFELpVT8XYcbOQH6dvB4/getUpdates
+
 //https://web.telegram.org/#/im?p=@cscpr_bot
 public class FluxoTelegramFaculdade extends FluxoTelegram {
 	private static final String ESTACIO_PNG = "estacio.png";
 	private int offSetAtributo = 0;
+/*
+private Integer getUserId( final Update update ) {
 
+        if ( update.message() != null ) {
+            return update.message().from().id();
+        } else if ( update.getCallback_query() != null ) {
+            return update.getCallback_query().getFrom().id();
+        } else if ( update.chosenInlineResult() != null ) {
+            return update.chosenInlineResult().from().id();
+        } else if ( update.inlineQuery() != null ) {
+            return update.inlineQuery().from().id();
+        }
+
+        return -1;
+    }
+ */
 	public void iniciarChatBotTelegram() {
 		GetUpdatesResponse updatesResponse;
 		SendResponse sendResponse = null;
 		BaseResponse baseResponse;
-
 		updatesResponse = this.botTelegram.execute(new GetUpdates().limit(100).offset(this.offSetAtributo));
-
-		// lista de mensagens
 		List<Update> updates = updatesResponse.updates();
-
-		// análise de cada ação da mensagem
+ 
+		//
+		//Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+		SetWebhook request = new SetWebhook()
+			       .url("https://api.telegram.org/1015053732:AAHWzTrMTCCSEmjoFELpVT8XYcbOQH6dvB4/setWebhook")
+			       .certificate(new byte[]{}); // byte[]
+//			       .certificate(new File("path")); // or file 
+		BaseResponse response = this.botTelegram.execute(request);
+		boolean ok = response.isOk();
+		//
 		if (updates != null) {
 			for (Update update : updates) {
 				InteracaoComando dadosEntrada = validarComandoRecebidoFaculdade(update);

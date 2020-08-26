@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FaqEstacio {
 	private static final String DOUGLAS_MENDES_ESTACIO_BR = "\nEnviar email para: douglas.mendes@estacio.br";
-	private static final String SSA_CTBA_ESTACIO_BR2 = "\nEnviar email para: ssa.ctba@estacio.br";
+	private static final String SSA_CTBA_ESTACIO_BR2 = "\nADS. Enviar email para: \nmariana.veloso@estacio.br\nssa.ctba@estacio.br";
 	private static final String FIES_CURITIBA_ESTACIO_BR = "\nEnviar email para: fies.curitiba@estacio.br";
 	private static final String PROUNI_CURITIBA_ESTACIO_BR = "\nEnviar email para: prouni.curitiba@estacio.br";
 	private static final String COLACAO_CTBA_ESTACIO_BR = "\nEnviar email para: colacao.ctba@estacio.br";
@@ -23,9 +23,9 @@ public class FaqEstacio {
 	private static final String SEGUNDA_A_SEXTA_FEIRA_DAS_9H30_AS_17H30 = "\nsegunda a sexta feira das 9h30 as 17h30.";
 	private static final String EDLAINE_TAMANINI_ESTACIO_BR = "\nedlaine.tamanini@estacio.br";
 
-	private static final String _41_99261_9070 = "\n41 99261-9070";
-	private static final String _41_98530_8359 = "\n41 98530-8359";
-	private static final String _41_98879_8791 = "\n41 98879-8791";
+	private static final String DOUGLAS_MENDES_CEL = "\nWhatsapp: 41 99261-9070";
+	private static final String _41_98530_8359 = "\nWhatsapp: 41 98530-8359";
+	private static final String _41_98879_8791 = "\nWhatsapp: 41 98879-8791";
 
 	private static final String COLACAO_DE_GRAU = "\nCola��o de Grau: ";
 	private static final String GRADE_VAZIA = "\nGrade vazia: ";
@@ -42,7 +42,7 @@ public class FaqEstacio {
 	private static final String GRADE2 = "Grade";
 	private static final String BOLETO2 = "Boleto";
 	private static final String FINANCEIRO2 = "Financeiro";
-	private static final String SECRETARIA2 = "Secretaria";
+	private static final String SECRETARIA2 = "Matricula/Secret";
 	private static final String ACADEMICO2 = "Academico";
 	private static final String COORDENADOR_ADS = "Coordenador ADS";
 	private static final String DATAS_IMPORTANTES = "\nDatas importantes: ";
@@ -100,19 +100,23 @@ public class FaqEstacio {
 				+ "SIA - Atendimento > novo > nota/presen�a/atividades complementares > lan�amento de atividade externas";
 		duvida = new FAQ(ACADEMICO_ID, 4, HORAS_COMPLEMENTARES, requerimentoAAC);
 		nivel01.add(duvida);
-		
-		duvida = new FAQ(ACADEMICO_ID, 5, ACESSAR_MINHAS_AULAS_TEAMS,"\nComo <b>acessar</b> minhas aulas no Teams." , true,"Comoacessarminhasaulas.pdf");
+
+		duvida = new FAQ(ACADEMICO_ID, 5, ACESSAR_MINHAS_AULAS_TEAMS, "\nComo <b>acessar</b> minhas aulas no Teams.",
+				true, "Comoacessarminhasaulas.pdf");
 		nivel01.add(duvida);
 
-		duvida = new FAQ(ACADEMICO_ID, 6, ASSITIR_MINHAS_AULAS_TEAMS,"\nComo <b>assistir</b> aulas online no Teams." , true,"Comoassistiraulasonline.pdf");
+		duvida = new FAQ(ACADEMICO_ID, 6, ASSITIR_MINHAS_AULAS_TEAMS, "\nComo <b>assistir</b> aulas online no Teams.",
+				true, "Comoassistiraulasonline.pdf");
 		nivel01.add(duvida);
 
-		duvida = new FAQ(ACADEMICO_ID, 7, EMAIL_INSTITUCIONAL,"\nComo <b>criar o email institucional</b>." , true,"Comocriaroemailinstitucional.pdf");
+		duvida = new FAQ(ACADEMICO_ID, 7, EMAIL_INSTITUCIONAL, "\nComo <b>criar o email institucional</b>.", true,
+				"Comocriaroemailinstitucional.pdf");
 		nivel01.add(duvida);
 
-		duvida = new FAQ(ACADEMICO_ID, 8, ACESSAR_AULAS_GRAVADAS_TEAMS,"\\nComo <b>assistir</b> aulas gravadas no Teams." , true,"Comoassistiraulasgravadas.pdf");
+		duvida = new FAQ(ACADEMICO_ID, 8, ACESSAR_AULAS_GRAVADAS_TEAMS,
+				"\\nComo <b>assistir</b> aulas gravadas no Teams.", true, "Comoassistiraulasgravadas.pdf");
 		nivel01.add(duvida);
- 
+
 		return nivel01;
 	}
 
@@ -173,10 +177,10 @@ public class FaqEstacio {
 				+ "	Aten��o: A depender do curr�culo, verifique com seu coordenador se a regra permanece. ";
 		String gradeVazia = "\nSe Mensagem do SIA for: Turmas Indispon�veis. Para mais informa��es, entre em contato com a sua Coordena��o ... \n"
 				+ "Verificar quais disciplinas faltam em seu Hist�rico Escolar para fechar o curso. "
-				+ "Ser� realizado estudo de viabilidade para abertura de turmas EDO (Estudo Dirigido Online) ou EDP (Estudo Dirigido Presencial) ap�s abertura do requerimento. "
+				+ "Realizaremos estudo de viabilidade para abertura de turmas EDO (Estudo Dirigido Online) ou EDP (Estudo Dirigido Presencial) ap�s abertura do requerimento. "
 				+ "Abrir seu requerimento no SIA: Atendimento > Requerimentos > novo > monografia/TCC/cola��o/diploma > cursar mat�ria indispon�vel para formando"
 				+ "\n\n<b>Aten��o 01:</b> No requerimento informar o C�digo (ID) da Disciplina e seu NOME. Sem estes dados poder� ter seu requerimento Indeferido pelo CSC. "
-				+ "\n<b>Aten��o 02:</b> A disciplina ser� presencial e digital no modelo EDP - Ensino Dirigido Presencial. Aten��o: Da carga hor�ria semanal Ser� 50% em sala de aula/Teams e 50% somente digital. Os valores das disciplinas seguem os mesmos modelos das disciplinas que cursaram nos �ltimos semestres. Programada para iniciar no pr�ximo m�s."
+				+ "\n<b>Aten��o 02:</b> A disciplina ser� presencial e digital no modelo EDP - Ensino Dirigido Presencial. Aten��o: Da carga hor�ria semanal Ser� 50% em sala de aula/Teams e 50% somente digital. Os valores das disciplinas seguem os mesmos modelos das disciplinas que cursaram nos �ltimos semestres. Programada para iniciar no pr�ximo m�s (Ex.: em 2020.2 ser� setembro)."
 				+ "\n<b>Aten��o 03:</b> Para realizar sua rematricula exige estar tudo quitado.";
 
 		duvida = new FAQ(GRADE_ID, 1, DISCIPLINAS_ELETIVAS, eletivas);
@@ -193,10 +197,9 @@ public class FaqEstacio {
 		nivel01.add(duvida);
 
 		duvida = new FAQ(GRADE_ID, 6, AJUSTAR_GRADE,
-				"\nAten��o: Atualizar o valor do boleto na aba financeiro.\nhttp://renova.estacio.br");
+				"\nAten��o: <b>Atualizar</b> o valor do boleto na ABA Financeiro.\nhttp://renova.estacio.br");
 		nivel01.add(duvida);
 
-		nivel01.add(duvida);
 		return nivel01;
 	}
 
@@ -212,7 +215,7 @@ public class FaqEstacio {
 	public List<FAQ> carregarNivelCoordenacaoADS() {
 		List<FAQ> nivel01 = new ArrayList<>();
 		FAQ duvida;
-		String telefone = _41_99261_9070;
+		String telefone = DOUGLAS_MENDES_CEL;
 		String email = DOUGLAS_MENDES_ESTACIO_BR;
 		duvida = new FAQ(COORDENACAO_ADS_ID, 1, CONTATO, telefone + email);
 		nivel01.add(duvida);
@@ -224,8 +227,12 @@ public class FaqEstacio {
 		List<FAQ> nivel01 = new ArrayList<>();
 		FAQ duvida;
 		StringBuilder datas = new StringBuilder();
-		datas.append(
-				"\nSimulado AV1 (Teste que abrange os conte�dos iniciais da disciplina): INI: 18/08/2020 - FIM: 28/08/2020");
+		datas.append("\nSimulado AV1 (Abrange os conte�dos iniciais da disciplina. Adcionar� at� 2 pontos na AV1 :))");
+		datas.append("\nValide se sua disciplina esta participando.");
+		datas.append("\nINI: 18/08/2020 - FIM: 22/09/2020.");
+		datas.append("\nURL: https://simulado.estacio.br/alunos/");
+		datas.append("\n<b>Lan�amento dos pontos no dia 19/10/2020</b>");
+
 		datas.append("\n\nAvalia��o Parcial: INI: 17/09/2020 - FIM: 01/11/2020");
 		datas.append("\n\nAV Online: INI: 29/09/2020 - FIM: 24/11/2020");
 		datas.append("\n\nAV1 Presencial: INI: 05/10/2020 - FIM: 10/10/2020");
