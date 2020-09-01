@@ -11,10 +11,14 @@ public class FaqEstacio {
 	private static final String COLACAO_CTBA_ESTACIO_BR = "\nEnviar email para: colacao.ctba@estacio.br";
 
 	private static final String HORAS_COMPLEMENTARES = "AACs: ";
+	private static final String REGRAS_HORAS_COMPLEMENTARES_GRADE = "Regras AACs: ";
+	private static final String REGRAS_HORAS_COMPLEMENTARES_AURA = "AURA Regras AACs: ";
 	private static final String ACESSAR_MINHAS_AULAS_TEAMS = "Acessar aulas Teams.";
 	private static final String ASSITIR_MINHAS_AULAS_TEAMS = "Assistir aulas Teams.";
 	private static final String EMAIL_INSTITUCIONAL = "Email Institucional.";
 	private static final String ACESSAR_AULAS_GRAVADAS_TEAMS = "Aulas gravadas.";
+	private static final String PROVAS_EAD = "Provas EAD.";
+	private static final String AULAS_EAD = "Aulas EAD.";
 
 	private static final String AJUSTAR_GRADE = "Ajustar grade: ";
 	private static final String VISUALIZAR_GRADE_2020_2 = "\nVisualizar grade 2020.2: ";
@@ -27,17 +31,17 @@ public class FaqEstacio {
 	private static final String _41_98530_8359 = "\nWhatsapp: 41 98530-8359";
 	private static final String _41_98879_8791 = "\nWhatsapp: 41 98879-8791";
 
-	private static final String COLACAO_DE_GRAU = "\nColaï¿½ï¿½o de Grau: ";
+	private static final String COLACAO_DE_GRAU = "\nColação de Grau: ";
 	private static final String GRADE_VAZIA = "\nGrade vazia: ";
 	private static final String ENTENDA_SEUS_CREDITOS = "Entenda seus crï¿½ditos: ";
 	private static final String DISCIPLINAS_ELETIVAS = "\nDisciplinas eletivas: ";
-	private static final String DUVIDA_PRINCIPAL = "\nDï¿½vida Principal: ";
+	private static final String DUVIDA_PRINCIPAL = "\nDúvida Principal: ";
 	private static final String REQUERIMENTO = "Requerimento: ";
 	private static final String FIES = "FIES: ";
-	private static final String RENOVACAO_DO_PAR = "Renovaï¿½ï¿½o do PAR: ";
+	private static final String RENOVACAO_DO_PAR = "Renovação do PAR: ";
 	private static final String VDI_TI_NA_NUVEM = "VDI TI na Nuvem: ";
 	private static final String PROUNI = "PROUNI: ";
-	private static final String ESTAGIO_PROFISSIONAL = "Estï¿½gio Profissional: ";
+	private static final String ESTAGIO_PROFISSIONAL = "Estágio Profissional: ";
 	private static final String BIBLIOTECA2 = "Biblioteca";
 	private static final String GRADE2 = "Grade";
 	private static final String BOLETO2 = "Boleto";
@@ -46,7 +50,7 @@ public class FaqEstacio {
 	private static final String ACADEMICO2 = "Academico";
 	private static final String COORDENADOR_ADS = "Coordenador ADS";
 	private static final String DATAS_IMPORTANTES = "\nDatas importantes: ";
-	private static final String AVALIACOES = "\nAvaliaï¿½ï¿½es";
+	private static final String AVALIACOES = "\nAvaliações";
 	private static final String CONTATO = "\nContato: ";
 	public static final int PAI = 0;
 	public static final int ACADEMICO_ID = 1;
@@ -96,25 +100,71 @@ public class FaqEstacio {
 		nivel01.add(duvida);
 		duvida = new FAQ(ACADEMICO_ID, 3, VDI_TI_NA_NUVEM, urlVDI);
 		nivel01.add(duvida);
-		String requerimentoAAC = "\nPara incluir horas complementares abrir requerimento:\n"
-				+ "SIA - Atendimento > novo > nota/presenï¿½a/atividades complementares > lanï¿½amento de atividade externas";
-		duvida = new FAQ(ACADEMICO_ID, 4, HORAS_COMPLEMENTARES, requerimentoAAC);
+		String tipoAAC = "\nTemos AACs internas e externas. Para incluir horas complementares abrir requerimento.";
+		String tipoAACInterna = "\nInternas: Atividades realizadas pela própria Estácio (Palestas Seminários...).";
+		String reqAACInterna = "\nRequerimento: SIA - Atendimento > novo > nota/presenca/atividades complementares > lancamento de atividades internas >";
+		String tipoAACExterna = "\nExternas, Atividades realizadas em outras instituições, tal como Udemy.";
+		String intervaloExternas1 = "\nIntervalo para lançamento: ";
+		String intervaloExternas2 = "05/10/2020 até 12/12/2020.";
+		String prazoExternas = "\nPrazo de entrada no sistema será de até 30 dias após o deferimento dos certificados.";
+		String reqAACExterna = "\nRequerimento: SIA - Atendimento > novo > nota/presenca/atividades complementares > lancamento de atividades externas >";
+		duvida = new FAQ(ACADEMICO_ID, 4, HORAS_COMPLEMENTARES, tipoAAC + tipoAACInterna + reqAACInterna
+				+ tipoAACExterna + intervaloExternas1 + intervaloExternas2 + prazoExternas + reqAACExterna);
 		nivel01.add(duvida);
 
-		duvida = new FAQ(ACADEMICO_ID, 5, ACESSAR_MINHAS_AULAS_TEAMS, "\nComo <b>acessar</b> minhas aulas no Teams.",
+		StringBuilder regrasAAC = new StringBuilder();
+		regrasAAC.append("\n\nCurso de ADS possui o total de 400h classificadas em:");
+		regrasAAC.append("\nAACs externas (200h) e AACs internas (200h)");
+		regrasAAC.append("\nComo atividades externas citamos:");
+		regrasAAC.append(
+				"\nCursos de extensão, Estágio profissional, Doação de Sangue, Voluntáriado, Cursos de Línguas.");
+		regrasAAC.append("\nAtividades internas serão promovidas pela Estáco Curitiba ou Nacional.");
+		regrasAAC.append(
+				"\nEm ambas as classificações, o aluno deverá praticar um limite de horas dentro das seguintes ênfases temáticas:");
+		regrasAAC.append("\n\n<b>Criatividade e Inovação 40h");
+		regrasAAC.append("\nDireitos Humanos 40h");
+		regrasAAC.append("\nHistória dos povos Indigenas e Afrodescentes 40h");
+		regrasAAC.append("\nMeio Ambiente e Sustentabilidade 40h");
+		regrasAAC.append("\nTecnologias Educacionais 40h");
+		regrasAAC.append("\nLivre 200h</b>");
+		duvida = new FAQ(ACADEMICO_ID, 5, REGRAS_HORAS_COMPLEMENTARES_GRADE, regrasAAC.toString());
+		nivel01.add(duvida);
+
+		StringBuilder regrasAACAURA = new StringBuilder();
+		regrasAACAURA.append("\n\n<b>Alunos entrantes a partir de 2020.01. </b>");
+		regrasAACAURA.append("\nAACs externas e internas totalizando 120h.");
+		regrasAACAURA.append("\nComo atividades externas citamos:");
+		regrasAACAURA.append(
+				"\nCursos de extensão, Estágio profissional, Doação de Sangue, Voluntáriado, Cursos de Línguas.");
+		regrasAACAURA.append("\nAtividades internas serão promovidas pela Estáco Curitiba ou Nacional.");
+		duvida = new FAQ(ACADEMICO_ID, 6, REGRAS_HORAS_COMPLEMENTARES_AURA, regrasAACAURA.toString());
+		nivel01.add(duvida);
+
+		duvida = new FAQ(ACADEMICO_ID, 7, ACESSAR_MINHAS_AULAS_TEAMS, "\nComo <b>acessar</b> minhas aulas no Teams.",
 				true, "Comoacessarminhasaulas.pdf");
 		nivel01.add(duvida);
 
-		duvida = new FAQ(ACADEMICO_ID, 6, ASSITIR_MINHAS_AULAS_TEAMS, "\nComo <b>assistir</b> aulas online no Teams.",
+		duvida = new FAQ(ACADEMICO_ID, 8, ASSITIR_MINHAS_AULAS_TEAMS, "\nComo <b>assistir</b> aulas online no Teams.",
 				true, "Comoassistiraulasonline.pdf");
 		nivel01.add(duvida);
 
-		duvida = new FAQ(ACADEMICO_ID, 7, EMAIL_INSTITUCIONAL, "\nComo <b>criar o email institucional</b>.", true,
+		duvida = new FAQ(ACADEMICO_ID, 9, EMAIL_INSTITUCIONAL, "\nComo <b>criar o email institucional</b>.", true,
 				"Comocriaroemailinstitucional.pdf");
 		nivel01.add(duvida);
 
-		duvida = new FAQ(ACADEMICO_ID, 8, ACESSAR_AULAS_GRAVADAS_TEAMS,
-				"\\nComo <b>assistir</b> aulas gravadas no Teams.", true, "Comoassistiraulasgravadas.pdf");
+		duvida = new FAQ(ACADEMICO_ID, 10, ACESSAR_AULAS_GRAVADAS_TEAMS,
+				"\nComo <b>assistir</b> aulas gravadas no Teams.", true, "Comoassistiraulasgravadas.pdf");
+		nivel01.add(duvida);
+
+		String descEAD = "Qual é a diferença agora? A Avaliação Parcial era realizada com base nas cinco primeiras aulas (aluno tinha três chances de alcançar a pontuação extra). Agora, o Simulado contemplará todo conteúdo e serão duas oportunidades de alcançar a pontuação extra, mas em dois períodos distintos. Assim como acontecia com a Avaliação Parcial, esta pontuação extra será somada desde que o aluno tire, no mínimo, quatro pontos na AV ou na AVs.";
+		duvida = new FAQ(ACADEMICO_ID, 11, PROVAS_EAD,
+				"\n\nDicas sobre Provas EAD: \nAV (Avaliação)\nAVs (Avaliação Suplementar ou Substitutiva)\nSimulado (substituiu a Avaliação Parcial)\n\n"
+						+ descEAD,
+				true, "FAQPROVADISCIPLINAONLINE.pdf");
+		nivel01.add(duvida);
+
+		duvida = new FAQ(ACADEMICO_ID, 12, AULAS_EAD, "\nComo <b>assistir</b> aulas de disciplinas EAD.", true,
+				"FAQACESSODISCIPLINAONLINE.pdf");
 		nivel01.add(duvida);
 
 		return nivel01;
@@ -152,13 +202,13 @@ public class FaqEstacio {
 	public List<FAQ> carregarNivelBoleto() {
 		List<FAQ> nivel01 = new ArrayList<>();
 		FAQ duvida;
-		String duvidaPrincipal = "\nValor da mensalidade aumentou mesmo possuindo nï¿½mero similar de disciplinas. Porque? \r\n"
-				+ "O boleto do mï¿½s subsequente (Ex.: Agosto/2020) vem com os valores retroativos a julho/2020, pois as disciplinas sï¿½o semestrais, ou seja,	vocï¿½ paga ela por 6 meses.";
+		String duvidaPrincipal = "\nValor da mensalidade aumentou mesmo possuindo número similar de disciplinas. Porque? \r\n"
+				+ "O boleto do mês subsequente (Ex.: Agosto/2020) vem com os valores retroativos a julho/2020, pois as disciplinas são semestrais, ou seja,	pagará ela por 6 meses.";
 		String requerimentoBoleto = "\nAbrir Requerimento no SIA: Atendimento > Requerimentos > Novo > Financeiro/Financiamento/Bolsa/Analise Boleto";
-		String discCreditos = "\nCada disciplina possui um nï¿½mero fixo de crï¿½ditos. A modalidade de cobranï¿½a esta relacionada aos crï¿½ditos de cada "
-				+ "disciplina, Desse modo, o valor de sua mensalidade serï¿½ em acordo com a quantidade de crï¿½ditos incluï¿½dos."
-				+ "\nPor padrï¿½o em cada semestre o aluno deverï¿½ matricular-se em disciplinas que somem de 8 a 40 crï¿½ditos. Caso o aluna"
-				+ "deseja reduzir ou aumentar os crï¿½dito deverï¿½ contactar a coordenaï¿½ï¿½o.";
+		String discCreditos = "\nCada disciplina possui um número fixo de créditos. A modalidade de cobrança esta relacionada aos créditos de cada "
+				+ "disciplina, Desse modo, o valor de sua mensalidade será em acordo com a quantidade de créditos incluídos."
+				+ "\nPor padrão em cada semestre o aluno deverá matricular-se em disciplinas que somem de 8 a 40 créditos. Caso o aluno"
+				+ "deseja reduzir ou aumentar os créditos deverá contactar a coordenação.";
 
 		duvida = new FAQ(BOLETO_ID, 1, DUVIDA_PRINCIPAL, duvidaPrincipal);
 		nivel01.add(duvida);
@@ -173,16 +223,15 @@ public class FaqEstacio {
 	public List<FAQ> carregarNivelGrade() {
 		List<FAQ> nivel01 = new ArrayList<>();
 		FAQ duvida;
-		String eletivas = "\nAluno deverï¿½ cursar uma disciplina do grupo G1 e uma do grupo G2. (Modelo do curso de ADS - Para conhecer as disciplinas dos grupos G1 e G2 analise seu histï¿½rco escolar. "
-				+ "	Atenï¿½ï¿½o: A depender do currï¿½culo, verifique com seu coordenador se a regra permanece. ";
-		String gradeVazia = "\nSe Mensagem do SIA for: Turmas Indisponï¿½veis. Para mais informaï¿½ï¿½es, entre em contato com a sua Coordenaï¿½ï¿½o ... \n"
-				+ "Verificar quais disciplinas faltam em seu Histï¿½rico Escolar para fechar o curso. "
+		String eletivas = "\nAluno deverá cursar uma disciplina do grupo G1 e uma do grupo G2. (Modelo do curso de ADS - Para conhecer as disciplinas dos grupos G1 e G2 analise seu histórico escolar. ";
+		String gradeVazia = "\nCaso receba a mensagem do SIA: Turmas Indisponíveis. Para mais informações, entre em contato com a sua Coordenação ... \n"
+				+ "Verificar quais disciplinas faltam em seu Histórico Escolar para fechar o curso. "
 				+ "Realizaremos estudo de viabilidade para abertura de turmas EDO (Estudo Dirigido Online) ou EDP (Estudo Dirigido Presencial) apï¿½s abertura do requerimento. "
-				+ "Abrir seu requerimento no SIA: Atendimento > Requerimentos > novo > monografia/TCC/colaï¿½ï¿½o/diploma > cursar matï¿½ria indisponï¿½vel para formando"
-				+ "\n\n<b>Atenï¿½ï¿½o 01:</b> No requerimento informar o Cï¿½digo (ID) da Disciplina e seu NOME. Sem estes dados poderï¿½ ter seu requerimento Indeferido pelo CSC. "
-				+ "\n<b>Atenï¿½ï¿½o 02:</b> A disciplina serï¿½ presencial e digital no modelo EDP - Ensino Dirigido Presencial. Atenï¿½ï¿½o: Da carga horï¿½ria semanal Serï¿½ 50% em sala de aula/Teams e 50% somente digital. Os valores das disciplinas seguem os mesmos modelos das disciplinas que cursaram nos ï¿½ltimos semestres. Programada para iniciar no prï¿½ximo mï¿½s (Ex.: em 2020.2 serï¿½ setembro)."
-				+ "\n<b>Atenï¿½ï¿½o 03:</b> Para realizar sua rematricula exige estar tudo quitado.";
-
+				+ "Abrir requerimento. SIA: Atendimento > Requerimentos > novo > monografia/TCC/colacao/diploma > cursar materia indisponivel para formando"
+				+ "\n\n<b>Atenção 01:</b> No requerimento informar o Código (ID) da Disciplina e seu NOME. Sem estes dados poderá ter seu requerimento Indeferido pelo CSC. "
+				+ "\n<b>Atenção 02:</b> A disciplina será presencial e digital no modelo EDP - Ensino Dirigido Presencial. "
+				+ "\\n<b>Atenção 03:</b> Da carga horária semanal será 50% em sala de aula/MS Teams e 50% somente digital. Os valores das disciplinas seguem os mesmos modelos das disciplinas que cursaram nos últimos semestres. Programada para iniciar no próximo mês (Ex.: em 2020.2 será setembro)."
+				+ "\n<b>Atenção 04:</b> Para realizar sua rematricula exige estar tudo quitado.";
 		duvida = new FAQ(GRADE_ID, 1, DISCIPLINAS_ELETIVAS, eletivas);
 		nivel01.add(duvida);
 		duvida = new FAQ(GRADE_ID, 2, GRADE_VAZIA, gradeVazia);
@@ -190,14 +239,14 @@ public class FaqEstacio {
 		duvida = new FAQ(GRADE_ID, 3, COLACAO_DE_GRAU, COLACAO_CTBA_ESTACIO_BR);
 		nivel01.add(duvida);
 		duvida = new FAQ(GRADE_ID, 4, DOC_FORMATURA, " Abrir Requerimento no SIA: \r\n"
-				+ "Atendimento > Requerimentos > novo > monografia/TCC/colaï¿½ï¿½o/diploma > atualizar documentos para colaï¿½ï¿½o de grau/Atualizaï¿½ï¿½o de documentos colaï¿½ï¿½o");
+				+ "Atendimento > Requerimentos > novo > monografia/TCC/colacao/diploma > atualizar documentos para colacao de grau/Atualizacao de documentos colacao");
 		nivel01.add(duvida);
 		duvida = new FAQ(GRADE_ID, 5, VISUALIZAR_GRADE_2020_2,
 				"https://docs.google.com/forms/d/1KQfvecNVKvP5gAzbLmp0lRYDf814k4K9ORuA4HK938M/edit");
 		nivel01.add(duvida);
 
 		duvida = new FAQ(GRADE_ID, 6, AJUSTAR_GRADE,
-				"\nAtenï¿½ï¿½o: <b>Atualizar</b> o valor do boleto na ABA Financeiro.\nhttp://renova.estacio.br");
+				"\nAtenção: <b>Atualizar</b> o valor do boleto na ABA Financeiro.\nhttp://renova.estacio.br");
 		nivel01.add(duvida);
 
 		return nivel01;
@@ -206,8 +255,8 @@ public class FaqEstacio {
 	public List<FAQ> carregarNivelBiblioteca() {
 		List<FAQ> nivel01 = new ArrayList<>();
 		FAQ duvida;
-		String devolucao = "\nA devoluï¿½ï¿½o de livro deverï¿½ ocorrer no retorno presencial das atividades.";
-		duvida = new FAQ(BIBLIOTECA_ID, 1, "Devoluï¿½ï¿½o: ", devolucao);
+		String devolucao = "\nA devolução de livro deverá ocorrer no retorno presencial das atividades.";
+		duvida = new FAQ(BIBLIOTECA_ID, 1, "Devolução: ", devolucao);
 		nivel01.add(duvida);
 		return nivel01;
 	}
@@ -227,20 +276,22 @@ public class FaqEstacio {
 		List<FAQ> nivel01 = new ArrayList<>();
 		FAQ duvida;
 		StringBuilder datas = new StringBuilder();
-		datas.append("\nSimulado AV1 (Abrange os conteï¿½dos iniciais da disciplina. Adcionarï¿½ atï¿½ 2 pontos na AV1 :))");
+		datas.append("\nSimulado AV1 (Abrange os conteúdos iniciais da disciplina. Adicionará até 2 pontos na AV1 :))");
 		datas.append("\nValide se sua disciplina esta participando.");
 		datas.append("\nINI: 18/08/2020 - FIM: 22/09/2020.");
 		datas.append("\nURL: https://simulado.estacio.br/alunos/");
-		datas.append("\n<b>Lanï¿½amento dos pontos no dia 19/10/2020</b>");
+		datas.append("\n<b>Lançamento dos pontos no dia 19/10/2020</b>");
 
-		datas.append("\n\nAvaliaï¿½ï¿½o Parcial: INI: 17/09/2020 - FIM: 01/11/2020");
+		datas.append("\n\nAvaliação Parcial: INI: 17/09/2020 - FIM: 01/11/2020");
 		datas.append("\n\nAV Online: INI: 29/09/2020 - FIM: 24/11/2020");
 		datas.append("\n\nAV1 Presencial: INI: 05/10/2020 - FIM: 10/10/2020");
 		datas.append("\n\nAVR Nova Chance: INI: 15/10/2020 - FIM: 24/10/2020");
 		datas.append("\n\nAV2 Presencial: INI: 23/11/2020 - FIM: 28/11/2020");
 		datas.append("\n\nAVS Online: INI: 01/12/2020 - FIM: 13/12/2020");
 		datas.append("\n\nAV3 Presencial: INI: 07/12/2020 - FIM: 12/12/2020");
-		duvida = new FAQ(DATAS_IMPORTANTES_ID, 1, DATAS_IMPORTANTES, datas.toString());
+		datas.append("\n\nAnexo tenho o Book da Estácio com muitas dicas para você.");
+		duvida = new FAQ(DATAS_IMPORTANTES_ID, 1, DATAS_IMPORTANTES, datas.toString(), true,
+				"bookestacio01092020.pdf");
 		nivel01.add(duvida);
 		return nivel01;
 	}
