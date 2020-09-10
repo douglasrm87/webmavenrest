@@ -65,27 +65,9 @@ git config --global http.sslCAInfo D:\devstudio12\workspace\javawebmaven\.jdk-ov
  * https://devcenter.heroku.com/articles/github-integration-review-apps
  * http://www.mauda.com.br/?p=1308
  C:\Program Files\heroku\bin>heroku login
-  
-https://devcenter.heroku.com/articles/heroku-cli#download-and-install
-https://devcenter.heroku.com/categories/deployment
- 
- */
-//https://www.alura.com.br/artigos/recebendo-dados-de-um-formulario-html-com-servlets
-// http://localhost:8080/javawebmaven/servletdouglasrm87
-// http://localhost:8080/javawebmaven/alojsf.jsf
-
-/*
- *  Heroku:
- *  https://cliwarjavamaven.herokuapp.com/alojsf.jsf
- *  https://cliwarjavamaven.herokuapp.com/servletdouglasrm87
- *  
  */
 
-
-//http://localhost:8080/herokuJBoss/api/cartaofidelidade
-//https://cliwarjavamaven.herokuapp.com/
-//https://cliwarjavamaven.herokuapp.com/cliwarjavamaven/api/cartaofidelidade
-
+ // http://localhost:8080/webmavenheroku/postgree.jsf
 
 @WebServlet("/servletdouglasrm87")
 public class ExemploServlet extends HttpServlet {

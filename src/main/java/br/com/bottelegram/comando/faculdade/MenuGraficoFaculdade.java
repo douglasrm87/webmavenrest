@@ -61,29 +61,32 @@ public class MenuGraficoFaculdade extends FluxoTelegram {
 	public void menuNivel01(long idUsuario) {
 
 		FaqEstacio faq = new FaqEstacio();
-		List<FAQ> listaCervejas = faq.carregarNivel01();
+		List<FAQ> listaMenuSuperior = faq.carregarNivel01();
 
-		InlineKeyboardButton academico = new InlineKeyboardButton(listaCervejas.get(0).getDescItem())
-				.callbackData(String.valueOf(listaCervejas.get(0).getIdPai() + "-" + listaCervejas.get(0).getIdItem()));
-		InlineKeyboardButton secretaria = new InlineKeyboardButton(listaCervejas.get(1).getDescItem())
-				.callbackData(String.valueOf(listaCervejas.get(1).getIdPai() + "-" + listaCervejas.get(1).getIdItem()));
-		InlineKeyboardButton financeiro = new InlineKeyboardButton(listaCervejas.get(2).getDescItem())
-				.callbackData(String.valueOf(listaCervejas.get(2).getIdPai() + "-" + listaCervejas.get(2).getIdItem()));
-		InlineKeyboardButton boleto = new InlineKeyboardButton(listaCervejas.get(3).getDescItem())
-				.callbackData(String.valueOf(listaCervejas.get(3).getIdPai() + "-" + listaCervejas.get(3).getIdItem()));
-		InlineKeyboardButton grade = new InlineKeyboardButton(listaCervejas.get(4).getDescItem())
-				.callbackData(String.valueOf(listaCervejas.get(4).getIdPai() + "-" + listaCervejas.get(4).getIdItem()));
-		InlineKeyboardButton biblioteca = new InlineKeyboardButton(listaCervejas.get(5).getDescItem())
-				.callbackData(String.valueOf(listaCervejas.get(5).getIdPai() + "-" + listaCervejas.get(5).getIdItem()));
-		InlineKeyboardButton coordencaoADS = new InlineKeyboardButton(listaCervejas.get(6).getDescItem())
-				.callbackData(String.valueOf(listaCervejas.get(6).getIdPai() + "-" + listaCervejas.get(6).getIdItem()));
+		InlineKeyboardButton academico = new InlineKeyboardButton(listaMenuSuperior.get(0).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(0).getIdPai() + "-" + listaMenuSuperior.get(0).getIdItem()));
+		InlineKeyboardButton secretaria = new InlineKeyboardButton(listaMenuSuperior.get(1).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(1).getIdPai() + "-" + listaMenuSuperior.get(1).getIdItem()));
+		InlineKeyboardButton financeiro = new InlineKeyboardButton(listaMenuSuperior.get(2).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(2).getIdPai() + "-" + listaMenuSuperior.get(2).getIdItem()));
+		InlineKeyboardButton boleto = new InlineKeyboardButton(listaMenuSuperior.get(3).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(3).getIdPai() + "-" + listaMenuSuperior.get(3).getIdItem()));
+		InlineKeyboardButton grade = new InlineKeyboardButton(listaMenuSuperior.get(4).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(4).getIdPai() + "-" + listaMenuSuperior.get(4).getIdItem()));
+		InlineKeyboardButton biblioteca = new InlineKeyboardButton(listaMenuSuperior.get(5).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(5).getIdPai() + "-" + listaMenuSuperior.get(5).getIdItem()));
+		InlineKeyboardButton coordencaoADS = new InlineKeyboardButton(listaMenuSuperior.get(6).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(6).getIdPai() + "-" + listaMenuSuperior.get(6).getIdItem()));
+		InlineKeyboardButton datasImportantes = new InlineKeyboardButton(listaMenuSuperior.get(7).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(7).getIdPai() + "-" + listaMenuSuperior.get(7).getIdItem()));
+		
+		// novo 06 - Empregos
+		InlineKeyboardButton empregos = new InlineKeyboardButton(listaMenuSuperior.get(8).getDescItem())
+				.callbackData(String.valueOf(listaMenuSuperior.get(8).getIdPai() + "-" + listaMenuSuperior.get(8).getIdItem()));
 
-		// novo
-		InlineKeyboardButton datasImportantes = new InlineKeyboardButton(listaCervejas.get(7).getDescItem())
-				.callbackData(String.valueOf(listaCervejas.get(7).getIdPai() + "-" + listaCervejas.get(7).getIdItem()));
-
+		
 		InlineKeyboardButton[][] vetorBotoes = { { academico, secretaria }, { financeiro, boleto },
-				{ grade, biblioteca }, { coordencaoADS, datasImportantes } }; // novo
+				{ grade, biblioteca }, { coordencaoADS, datasImportantes },{empregos} }; // novo 07
 		Keyboard teclado = new InlineKeyboardMarkup(vetorBotoes);
 
 		SendMessage msgTelegram = new SendMessage(idUsuario, "<b>COOrdBOT </b> MENU PRINCIPAL").parseMode(ParseMode.HTML)

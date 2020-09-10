@@ -12,11 +12,20 @@ import java.util.Scanner;
 
 public class PostgreSQLJDBC {
 	private static final String ORG_POSTGRESQL_DRIVER = "org.postgresql.Driver";
+	
 	private static final String LOCAL_POSTGREE = "jdbc:postgresql://localhost:5432/";
-	private static final String USUARIO_PORTGREE = "postgres";
+	private static final String USUARIO = "postgres";
 	private static final String SENHA_BD = "123456";
 	private static final String DATABASE = "faculdade";
 
+	
+	private static final String PORTA_HEROKU = "5432/";
+	private static final String HOST_HEROKU = "jdbc:postgresql://ec2-34-225-82-212.compute-1.amazonaws.com:" + PORTA_HEROKU;
+	private static final String USUARIO_HEROKU = "jrmnzjfkazhnfx";
+	private static final String DATABASE_HEROKU = "d18rq99epvib6";
+	private static final String SENHA_HEROKU = "476677037096d7eb2110bb22238fa0da06b5ba76e1e5c7861f28927c9c9d74ef";
+	
+	
 	protected static final String TABELA_CARTAO_FIDELIDADE = " CARTAO_FIDELIDADE ";
 	protected static final String TABELA_BONUS_CARTAO_FIDELIDADE = " BONUS_CARTAO_FIDELIDADE ";
 	protected static final String ID_CARTAO = "id_cartao";// não permite espaços.
@@ -77,16 +86,39 @@ public class PostgreSQLJDBC {
 		}
 	}
 
+	private String iswindows() {
+		// So: Windows 7
+		String so = System.getProperty("os.name");
+		System.out.println("So: " + so);
+		return so;
+	}
+
+//	Host:    	ec2-34-225-82-212.compute-1.amazonaws.com
+//	Database: 	d18rq99epvib6
+//	User:		jrmnzjfkazhnfx
+//	Port:		5432
+//	Password: 	476677037096d7eb2110bb22238fa0da06b5ba76e1e5c7861f28927c9c9d74ef
+//	URI:		postgres://jrmnzjfkazhnfx:476677037096d7eb2110bb22238fa0da06b5ba76e1e5c7861f28927c9c9d74ef@ec2-34-225-82-212.compute-1.amazonaws.com:5432/d18rq99epvib6
+//	Heroku CLI: 	heroku pg:psql postgresql-metric-49187 --app webmavenheroku
 	protected Connection conectarBDPostgree() {
 		Connection con = null;
 		try {
 			Class.forName(ORG_POSTGRESQL_DRIVER);
-			con = DriverManager.getConnection(LOCAL_POSTGREE + DATABASE, USUARIO_PORTGREE, SENHA_BD);
+			if (!iswindows().contains("Linux")) {
+				con = DriverManager.getConnection(LOCAL_POSTGREE + DATABASE, USUARIO, SENHA_BD);
+				return con;
+			} else {
+				// Usar dados do Heroku
+//				URI:		postgres://jrmnzjfkazhnfx:476677037096d7eb2110bb22238fa0da06b5ba76e1e5c7861f28927c9c9d74ef@ec2-34-225-82-212.compute-1.amazonaws.com:5432/d18rq99epvib6
+//				Heroku CLI: 	heroku pg:psql postgresql-metric-49187 --app webmavenheroku
+				con = DriverManager.getConnection(HOST_HEROKU + DATABASE_HEROKU, USUARIO_HEROKU, SENHA_HEROKU);
+				return con;
+			}
 		} catch (Exception e) {
 			printSQLException(null, e);
 		}
 		System.out.println("ConexÃ£o estabelecida com sucesso.");
-		return con;
+		return null;
 	}
 
 	protected static void printSQLException(SQLException ex, Exception exception) {

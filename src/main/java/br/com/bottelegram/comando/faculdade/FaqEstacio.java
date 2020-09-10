@@ -19,6 +19,8 @@ public class FaqEstacio {
 	private static final String ACESSAR_AULAS_GRAVADAS_TEAMS = "Aulas gravadas.";
 	private static final String PROVAS_EAD = "Provas EAD.";
 	private static final String AULAS_EAD = "Aulas EAD.";
+	private static final String SIMULADO_EAD = "Simulado AV/EAD.";
+	private static final String DEC_MARICULA = "Decl. Matricula";
 
 	private static final String AJUSTAR_GRADE = "Ajustar grade: ";
 	private static final String VISUALIZAR_GRADE_2020_2 = "\nVisualizar grade 2020.2: ";
@@ -33,7 +35,7 @@ public class FaqEstacio {
 
 	private static final String COLACAO_DE_GRAU = "\nColação de Grau: ";
 	private static final String GRADE_VAZIA = "\nGrade vazia: ";
-	private static final String ENTENDA_SEUS_CREDITOS = "Entenda seus crï¿½ditos: ";
+	private static final String ENTENDA_SEUS_CREDITOS = "Entenda seus créditos: ";
 	private static final String DISCIPLINAS_ELETIVAS = "\nDisciplinas eletivas: ";
 	private static final String DUVIDA_PRINCIPAL = "\nDúvida Principal: ";
 	private static final String REQUERIMENTO = "Requerimento: ";
@@ -50,8 +52,8 @@ public class FaqEstacio {
 	private static final String ACADEMICO2 = "Academico";
 	private static final String COORDENADOR_ADS = "Coordenador ADS";
 	private static final String DATAS_IMPORTANTES = "\nDatas importantes: ";
-	private static final String AVALIACOES = "\nAvaliações";
-	private static final String CONTATO = "\nContato: ";
+	private static final String AVALIACOES = "Avaliações/Book";
+	private static final String CONTATO = "Contato: ";
 	public static final int PAI = 0;
 	public static final int ACADEMICO_ID = 1;
 	public static final int SECRETARIA_ID = 2;
@@ -61,6 +63,13 @@ public class FaqEstacio {
 	public static final int BIBLIOTECA_ID = 6;
 	public static final int COORDENACAO_ADS_ID = 7;
 	public static final int DATAS_IMPORTANTES_ID = 8;
+
+	// novo 01
+	public static final int EMPREGOS_ID = 9;
+	private static final String EMPREGOS = "Empregos";
+	private static final String EMPREGOS_TXT = "Empregos Texto";
+	private static final String EMPREGOS_JPG = "Empregos Imagem";
+	private static final String ESTACIO_CARREIRAS = "Estácio Carreiras";
 
 	public List<FAQ> carregarNivel01() {
 		List<FAQ> nivel01 = new ArrayList<>();
@@ -79,9 +88,28 @@ public class FaqEstacio {
 		nivel01.add(duvida);
 		duvida = new FAQ(PAI, COORDENACAO_ADS_ID, COORDENADOR_ADS);
 		nivel01.add(duvida);
-
 		duvida = new FAQ(PAI, DATAS_IMPORTANTES_ID, AVALIACOES);
 		nivel01.add(duvida);
+
+		// novo 02
+		duvida = new FAQ(PAI, EMPREGOS_ID, EMPREGOS);
+		nivel01.add(duvida);
+
+		return nivel01;
+	}
+
+	// novo 03
+	public List<FAQ> carregarNivelEmpregos() {
+		List<FAQ> nivel01 = new ArrayList<>();
+		FAQ duvida;
+		duvida = new FAQ(EMPREGOS_ID, 1, EMPREGOS_TXT, "\nVagas de trabalho - Texto.", true, "empregostexto.pdf");
+		nivel01.add(duvida);
+		duvida = new FAQ(EMPREGOS_ID, 2, EMPREGOS_JPG, "\nVagas de trabalho - Imagem.", true, "empregosjpg.pdf");
+		nivel01.add(duvida);
+		duvida = new FAQ(EMPREGOS_ID, 3, ESTACIO_CARREIRAS,
+				"Site da Estácio com muitas dicas sobre como elaborar seu curriculum e vagas de emprego.\nhttp://www.estaciocarreiras.com.br/");
+		nivel01.add(duvida);
+
 		return nivel01;
 	}
 
@@ -165,6 +193,14 @@ public class FaqEstacio {
 
 		duvida = new FAQ(ACADEMICO_ID, 12, AULAS_EAD, "\nComo <b>assistir</b> aulas de disciplinas EAD.", true,
 				"FAQACESSODISCIPLINAONLINE.pdf");
+		nivel01.add(duvida);
+		duvida = new FAQ(ACADEMICO_ID, 13, SIMULADO_EAD,
+				"\nDicas sobre como realizar o Simulado da AV das disciplinas EAD.", true,
+				"FAQSIMULADODISCIPLINAONLINE.pdf");
+		nivel01.add(duvida);
+
+		duvida = new FAQ(ACADEMICO_ID, 14, DEC_MARICULA,
+				"\nSIA - Atendimento - Requerimento Novo - Certidão/Declaração/documento - Declaração Matricula.");
 		nivel01.add(duvida);
 
 		return nivel01;
@@ -271,7 +307,6 @@ public class FaqEstacio {
 		return nivel01;
 	}
 
-	// novo
 	public List<FAQ> carregarNivelDataImportantes() {
 		List<FAQ> nivel01 = new ArrayList<>();
 		FAQ duvida;
@@ -290,8 +325,7 @@ public class FaqEstacio {
 		datas.append("\n\nAVS Online: INI: 01/12/2020 - FIM: 13/12/2020");
 		datas.append("\n\nAV3 Presencial: INI: 07/12/2020 - FIM: 12/12/2020");
 		datas.append("\n\nAnexo tenho o Book da Estácio com muitas dicas para você.");
-		duvida = new FAQ(DATAS_IMPORTANTES_ID, 1, DATAS_IMPORTANTES, datas.toString(), true,
-				"bookestacio01092020.pdf");
+		duvida = new FAQ(DATAS_IMPORTANTES_ID, 1, DATAS_IMPORTANTES, datas.toString(), true, "bookestacio01092020.pdf");
 		nivel01.add(duvida);
 		return nivel01;
 	}

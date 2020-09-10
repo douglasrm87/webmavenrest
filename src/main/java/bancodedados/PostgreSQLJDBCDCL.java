@@ -8,27 +8,71 @@ import java.sql.Statement;
 
 // senha no pgadmin - 123456
 // pgadmin: http://127.0.0.1:54654/browser/#
+//http://localhost:8080/webmavenheroku/postgree.jsf
 
 public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 
-	private static final String AUTO_INCREMENT = " bigserial ";
-	private static final String REFERENCES = " REFERENCES ";
-	private static final String FOREIGN_KEY = " FOREIGN KEY ";
+	public static final String AUTO_INCREMENT = " bigserial ";
+	public static final String REFERENCES = " REFERENCES ";
+	public static final String FOREIGN_KEY = " FOREIGN KEY ";
 
-	private static final String CREATE_TABLE_IF_NOT_EXISTS = " CREATE TABLE IF NOT EXISTS  ";
-	private static final String DROP_TABLE = " DROP TABLE ";
-	private static final String PRIMARY_KEY = " PRIMARY KEY ";
+	public static final String CREATE_TABLE_IF_NOT_EXISTS = " CREATE TABLE IF NOT EXISTS  ";
+	public static final String DROP_TABLE = " DROP TABLE ";
+	public static final String PRIMARY_KEY = " PRIMARY KEY ";
 
-	private static final String TEXT_NULL = " TEXT NULL ";
-	private static final String TEXT_NOT_NULL = " TEXT NOT NULL ";
-	private static final String DOUBLE_NOT_NULL = " DOUBLE PRECISION NOT NULL ";
-	private static final String INT_NOT_NULL = " INT NOT NULL ";
-	private static final String BIGINT_NOT_NULL = " BIGINT NOT NULL ";
-	private static final String NOT_NULL = " NOT NULL ";
-	private static final String DATE_NOT_NULL = " DATE NOT NULL";
+	public static final String TEXT_NULL = " TEXT NULL ";
+	public static final String TEXT_NOT_NULL = " TEXT NOT NULL ";
+	public static final String DOUBLE_NOT_NULL = " DOUBLE PRECISION NOT NULL ";
+	public static final String INT_NOT_NULL = " INT NOT NULL ";
+	public static final String BIGINT_NOT_NULL = " BIGINT NOT NULL ";
+	public static final String NOT_NULL = " NOT NULL ";
+	public static final String DATE_NOT_NULL = " DATE NOT NULL";
 
 	public static void main(String args[]) {
 		new PostgreSQLJDBCDCL().processar();
+	}
+
+	public void criarTabelasViaWEB() {
+		try {
+			Connection con = conectarBDPostgree();
+			if (con != null) {
+				criarTabelaClienteDTO(con);
+				criarTabelaEnderecoDTO(con);
+				criarTabelaPedidoDTO(con);
+				criarTabelaItemPedidoDTO(con);
+				criarTabelaPagamentoDTO(con);
+				criarTabelaBonus(con);
+				criarTabelaCartao(con);
+				con.close();
+			} else {
+				System.out.println("Não foi possível obter uma conexão com o banco de dados para criar as tabelas.");
+			}
+		} catch (SQLException e) {
+			System.out.println("Problemas na criação de tabelas.");
+			e.printStackTrace();
+		}
+	}
+
+	public void removerTabelasViaWEB() {
+		try {
+			Connection con = conectarBDPostgree();
+			if (con != null) {
+				removerTabelaCartao(con);
+				removerTabelaBonus(con);
+				removerTabelaEnderecoDTO(con);
+				removerTabelaItemPedidoDTO(con);
+				removerTabelaPagamentoDTO(con);
+				removerTabelaPedidoDTO(con);
+				removerTabelaClienteDTO(con);
+				con.close();
+			} else {
+				System.out.println("Não foi possível obter uma conexão com o banco de dados para remover as tabelas.");
+			}
+		} catch (SQLException e) {
+			System.out.println("Problemas na remoção de tabelas.");
+			e.printStackTrace();
+		}
+
 	}
 
 	private void processar() {
@@ -44,13 +88,14 @@ public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 			switch (op) {
 			case 1:
 				if (con != null) {
+					criarTabelaClienteDTO(con);
+					criarTabelaEnderecoDTO(con);
+					criarTabelaPedidoDTO(con);
+					criarTabelaItemPedidoDTO(con);
+					criarTabelaPagamentoDTO(con);
 					criarTabelaBonus(con);
 					criarTabelaCartao(con);
-//					criarTabelaClienteDTO(con);
-//					criarTabelaEnderecoDTO(con);
-//					criarTabelaPedidoDTO(con);
-//					criarTabelaItemPedidoDTO(con);
-//					criarTabelaPagamentoDTO(con);
+
 				}
 				break;
 			case 2:
@@ -58,11 +103,11 @@ public class PostgreSQLJDBCDCL extends PostgreSQLJDBC {
 					// Devido a chave estrangeira a remoÃ§Ã£o da tabela deve ser inversaa criaÃ§Ã£o.
 					removerTabelaCartao(con);
 					removerTabelaBonus(con);
-//					removerTabelaEnderecoDTO(con);
-//					removerTabelaItemPedidoDTO(con);
-//					removerTabelaPagamentoDTO(con);
-//					removerTabelaPedidoDTO(con);
-//					removerTabelaClienteDTO(con);
+					removerTabelaEnderecoDTO(con);
+					removerTabelaItemPedidoDTO(con);
+					removerTabelaPagamentoDTO(con);
+					removerTabelaPedidoDTO(con);
+					removerTabelaClienteDTO(con);
 
 				}
 				break;

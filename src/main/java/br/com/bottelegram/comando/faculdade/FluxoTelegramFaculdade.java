@@ -1,7 +1,7 @@
 package br.com.bottelegram.comando.faculdade;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.pengrad.telegrambot.model.Message;
@@ -19,6 +19,8 @@ import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 
 import bancodedados.dto.CentralMensagensBrewField;
+import bancodedados.faculdade.dto.InsereDados;
+import bancodedados.faculdade.dto.LOGFaculdade;
 import br.com.bottelegram.EscopoApplictCSCTimerTelegram;
 import br.com.bottelegram.FluxoTelegram;
 import br.com.bottelegram.comando.dto.InteracaoComando;
@@ -32,34 +34,32 @@ import br.com.bottelegram.comando.dto.InteracaoComando;
 public class FluxoTelegramFaculdade extends FluxoTelegram {
 	private static final String ESTACIO_PNG = "estacio.png";
 	private int offSetAtributo = 0;
-/*
-private Integer getUserId( final Update update ) {
 
-        if ( update.message() != null ) {
-            return update.message().from().id();
-        } else if ( update.getCallback_query() != null ) {
-            return update.getCallback_query().getFrom().id();
-        } else if ( update.chosenInlineResult() != null ) {
-            return update.chosenInlineResult().from().id();
-        } else if ( update.inlineQuery() != null ) {
-            return update.inlineQuery().from().id();
-        }
-
-        return -1;
-    }
- */
+	/*
+	 * private Integer getUserId( final Update update ) {
+	 * 
+	 * if ( update.message() != null ) { return update.message().from().id(); } else
+	 * if ( update.getCallback_query() != null ) { return
+	 * update.getCallback_query().getFrom().id(); } else if (
+	 * update.chosenInlineResult() != null ) { return
+	 * update.chosenInlineResult().from().id(); } else if ( update.inlineQuery() !=
+	 * null ) { return update.inlineQuery().from().id(); }
+	 * 
+	 * return -1; }
+	 */
 	public void iniciarChatBotTelegram() {
 		GetUpdatesResponse updatesResponse;
 		SendResponse sendResponse = null;
 		BaseResponse baseResponse;
 		updatesResponse = this.botTelegram.execute(new GetUpdates().limit(100).offset(this.offSetAtributo));
 		List<Update> updates = updatesResponse.updates();
- 
+
 		//
-		//Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first
+		// Conflict: can't use getUpdates method while webhook is active; use
+		// deleteWebhook to delete the webhook first
 		SetWebhook request = new SetWebhook()
-			       .url("https://api.telegram.org/1015053732:AAHWzTrMTCCSEmjoFELpVT8XYcbOQH6dvB4/setWebhook")
-			       .certificate(new byte[]{}); // byte[]
+				.url("https://api.telegram.org/1015053732:AAHWzTrMTCCSEmjoFELpVT8XYcbOQH6dvB4/setWebhook")
+				.certificate(new byte[] {}); // byte[]
 //			       .certificate(new File("path")); // or file 
 		BaseResponse response = this.botTelegram.execute(request);
 		boolean ok = response.isOk();
@@ -83,7 +83,11 @@ private Integer getUserId( final Update update ) {
 
 					StringBuffer msgRetornadaCliente = new StringBuffer();
 					msgRetornadaCliente.append("\nOlá " + dadosEntrada.getNome());
-					msgRetornadaCliente.append("\n<b>Vou te ajudar a esclarecer sua dúvida.</b>\n");
+					msgRetornadaCliente.append(
+							"\n<b>Vou te ajudar a esclarecer sua dúvida.</b>\nEscolha sua opção no menu principal.");
+//					msgRetornadaCliente.append(
+//							"\nEm seguida avalie a sua dúvida clicando nos botões do menu secundário apresentados após escolher sua opção.");
+					msgRetornadaCliente.append("\nSugestões enviar e-mail a <b>douglas.mendes@estacio.br</b>");
 
 					if (dadosEntrada.getIdComandoPai() == 0 && dadosEntrada.getIdComando() == 0) {
 						this.botTelegram.execute(new SendPhoto(dadosEntrada.getIdUsuarioTelegram(),
@@ -98,11 +102,17 @@ private Integer getUserId( final Update update ) {
 						msgRetornadaCliente
 								.append(processarDetalheDuvida(dadosEntrada, dadosEntrada.getIdUsuarioTelegram(),
 										dadosEntrada.getIdComandoPai(), dadosEntrada.getIdComando()));
+						InsereDados ins = new InsereDados();
+						LOGFaculdade logDTO = new LOGFaculdade(dadosEntrada.getIdUsuarioTelegram(), 
+								dadosEntrada.getNome(), dadosEntrada.getIdComandoPai(), 
+								dadosEntrada.getIdComando(), dadosEntrada.getComplementoComando(),
+								new Date());
+						ins.inserirLOG(logDTO);
 					}
 					sendResponse = this.botTelegram.execute(
 							new SendMessage(dadosEntrada.getIdUsuarioTelegram(), msgRetornadaCliente.toString())
 									.parseMode(ParseMode.HTML));
-					System.out.println("Mensagem Enviada:" + sendResponse.isOk() + "Contteudo: " + msgRetornadaCliente);
+					System.out.println("Mensagem Enviada:" + sendResponse.isOk() + "Conteudo: " + msgRetornadaCliente);
 				} else {
 					this.botTelegram.execute(new SendMessage(update.message().chat().id(), ""));
 					updatesResponse.updates().clear();
@@ -118,7 +128,6 @@ private Integer getUserId( final Update update ) {
 		InteracaoComando dadosEntrada = new InteracaoComando();
 		try {
 			String complemento;
-			int opcao = 0;
 
 			Message msgTelegram = update.message();
 			if (msgTelegram != null) {
@@ -185,10 +194,13 @@ private Integer getUserId( final Update update ) {
 			ret = faq.carregarNivelCoordenacaoADS();
 			menu.botoesNivel02(idUsuario, ret);
 			break;
-
-		// novo
 		case FaqEstacio.DATAS_IMPORTANTES_ID:
 			ret = faq.carregarNivelDataImportantes();
+			menu.botoesNivel02(idUsuario, ret);
+			break;
+		// novo 04
+		case FaqEstacio.EMPREGOS_ID:
+			ret = faq.carregarNivelEmpregos();
 			menu.botoesNivel02(idUsuario, ret);
 			break;
 
@@ -225,11 +237,15 @@ private Integer getUserId( final Update update ) {
 		case FaqEstacio.COORDENACAO_ADS_ID:
 			ret = faq.carregarNivelCoordenacaoADS();
 			break;
-
-		// novo
 		case FaqEstacio.DATAS_IMPORTANTES_ID:
 			ret = faq.carregarNivelDataImportantes();
 			break;
+
+		// novo 5
+		case FaqEstacio.EMPREGOS_ID:
+			ret = faq.carregarNivelEmpregos();
+			break;
+
 		default:
 			break;
 		}
@@ -245,6 +261,7 @@ private Integer getUserId( final Update update ) {
 				break;
 			}
 		}
+
 		return respDuvida;
 	}
 

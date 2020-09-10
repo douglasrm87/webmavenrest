@@ -8,8 +8,6 @@ import javax.faces.bean.ManagedBean;
 
 import bancodedados.dto.ClienteDTO;
 
-
-
 @ApplicationScoped
 @ManagedBean(name = "geral", eager = true)
 public class EscopoAplicacao {
